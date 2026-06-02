@@ -2587,42 +2587,67 @@ async function loadVideos() {
       throw new Error('Invalid API response format');
     }
 
-    // Update channel stats
+    // Update channel stats with fallback and validation
     if (data.stats && typeof data.stats === 'object') {
       console.log('📊 Updating channel statistics...');
 
-      if (data.stats.subscriberCount) {
+      // Update subscribers with better validation
+      if (data.stats.subscriberCount && data.stats.subscriberCount !== '0') {
         const subEl = document.getElementById('stat-subs');
         if (subEl) {
-          subEl.textContent = fmtNum(data.stats.subscriberCount);
-          updateSubscriberGoal(data.stats.subscriberCount);
-          console.log('✓ Subscribers:', fmtNum(data.stats.subscriberCount));
+          const subs = parseInt(data.stats.subscriberCount, 10);
+          if (!isNaN(subs) && subs > 0) {
+            subEl.textContent = fmtNum(subs);
+            updateSubscriberGoal(subs);
+            console.log('✓ Subscribers:', fmtNum(subs));
+            saveStatsCache({ subscribers: subs });
+          } else {
+            console.warn('⚠️ Invalid subscriber count:', data.stats.subscriberCount);
+          }
         }
       } else {
-        console.warn('⚠️ Subscriber count missing in response');
+        console.warn('⚠️ Subscriber count missing or zero, using cache fallback');
+        useStatsFallback('subscribers');
       }
 
-      if (data.stats.videoCount) {
+      // Update video count with validation
+      if (data.stats.videoCount && data.stats.videoCount !== '0') {
         const vidEl = document.getElementById('stat-vids');
         if (vidEl) {
-          vidEl.textContent = data.stats.videoCount;
-          console.log('✓ Videos:', data.stats.videoCount);
+          const vids = parseInt(data.stats.videoCount, 10);
+          if (!isNaN(vids) && vids >= 0) {
+            vidEl.textContent = vids;
+            console.log('✓ Videos:', vids);
+            saveStatsCache({ videos: vids });
+          } else {
+            console.warn('⚠️ Invalid video count:', data.stats.videoCount);
+          }
         }
       } else {
-        console.warn('⚠️ Video count missing in response');
+        console.warn('⚠️ Video count missing or zero, using cache fallback');
+        useStatsFallback('videos');
       }
 
-      if (data.stats.viewCount) {
+      // Update views with validation
+      if (data.stats.viewCount && data.stats.viewCount !== '0') {
         const viewEl = document.getElementById('stat-views');
         if (viewEl) {
-          viewEl.textContent = fmtNum(data.stats.viewCount);
-          console.log('✓ Total Views:', fmtNum(data.stats.viewCount));
+          const views = parseInt(data.stats.viewCount, 10);
+          if (!isNaN(views) && views >= 0) {
+            viewEl.textContent = fmtNum(views);
+            console.log('✓ Total Views:', fmtNum(views));
+            saveStatsCache({ views });
+          } else {
+            console.warn('⚠️ Invalid view count:', data.stats.viewCount);
+          }
         }
       } else {
-        console.warn('⚠️ View count missing in response');
+        console.warn('⚠️ View count missing or zero, using cache fallback');
+        useStatsFallback('views');
       }
     } else {
-      console.warn('⚠️ Stats object missing in response');
+      console.warn('⚠️ Stats object missing in response, using cache fallback');
+      useStatsFallback('all');
     }
 
     // Update videos
@@ -2698,6 +2723,85 @@ function saveBrowserCache(videos) {
     }));
   } catch (err) {
     console.warn('Could not save browser cache:', err.message);
+  }
+}
+
+/* ══════════════════
+   STATS CACHE HELPER
+   Separate cache for channel statistics
+══════════════════ */
+function getStatsCache() {
+  try {
+    const cached = localStorage.getItem('toxicbro_stats_cache');
+    if (cached) {
+      const data = JSON.parse(cached);
+      if (data.updatedAt) {
+        const age = Date.now() - new Date(data.updatedAt).getTime();
+        const hoursAgo = age / (1000 * 60 * 60);
+        console.log(`📊 Stats cache age: ${hoursAgo.toFixed(1)} hours`);
+        
+        // Use cache if less than 24 hours old
+        if (hoursAgo < 24) {
+          return data;
+        }
+      }
+    }
+  } catch (err) {
+    console.warn('Could not read stats cache:', err.message);
+  }
+  return null;
+}
+
+function saveStatsCache(statsData) {
+  try {
+    const current = getStatsCache() || { updatedAt: new Date().toISOString() };
+    const updated = {
+      ...current,
+      ...statsData,
+      updatedAt: new Date().toISOString(),
+    };
+    localStorage.setItem('toxicbro_stats_cache', JSON.stringify(updated));
+  } catch (err) {
+    console.warn('Could not save stats cache:', err.message);
+  }
+}
+
+function useStatsFallback(type) {
+  const cached = getStatsCache();
+  if (!cached) {
+    console.warn('⚠️ No stats cache available for fallback');
+    return;
+  }
+
+  if (type === 'all' || type === 'subscribers') {
+    if (cached.subscribers) {
+      const subEl = document.getElementById('stat-subs');
+      if (subEl) {
+        subEl.textContent = fmtNum(cached.subscribers);
+        updateSubscriberGoal(cached.subscribers);
+        console.log('✓ Using cached subscribers:', fmtNum(cached.subscribers));
+      }
+    }
+  }
+
+  if (type === 'all' || type === 'videos') {
+    if (cached.videos) {
+      const vidEl = document.getElementById('stat-vids');
+      if (vidEl) {
+        vidEl.textContent = cached.videos;
+        console.log('✓ Using cached videos:', cached.videos);
+      }
+    }
+  }
+
+  if (type === 'all' || type === 'views') {
+    if (cached.views) {
+      const viewEl = document.getElementById('stat-views');
+      if (viewEl) {
+        viewEl.textContent = fmtNum(cached.views);
+        console.log('✓ Using cached views:', fmtNum(cached.views));
+      }
+    }
   }
 }
 
