@@ -29,11 +29,17 @@ jobs:
         run: npm install axios
 
       - name: Fetch YouTube data (OPTIMIZED)
-        if: ${{ secrets.YOUTUBE_API_KEY || secrets.YOUTUBE_API_KEY_FALLBACK }}
         env:
           YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
           YOUTUBE_API_KEY_FALLBACK: ${{ secrets.YOUTUBE_API_KEY_FALLBACK }}
-        run: node .github/scripts/fetch-youtube-data.js
+        run: |
+          # Guard execution at runtime to avoid workflow validation errors when secrets are not present
+          if [ -n "${{ secrets.YOUTUBE_API_KEY }}" ] || [ -n "${{ secrets.YOUTUBE_API_KEY_FALLBACK }}" ]; then
+            echo "🚀 Found YouTube API key — running fetch script"
+            node .github/scripts/fetch-youtube-data.js
+          else
+            echo "⚠️  No YouTube API keys configured — skipping fetch step"
+          fi
 
       - name: Update SEO metadata
         run: npm run update-seo-data
