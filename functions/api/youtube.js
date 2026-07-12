@@ -8,22 +8,76 @@ const MAX_RESULTS = 9; // Number of videos to fetch
 const jsonHeaders = {
   'content-type': 'application/json; charset=utf-8',
   'cache-control': `public, max-age=300, s-maxage=${CACHE_SECONDS}, stale-while-revalidate=86400`,
-  'access-control-allow-origin': '*',
+  // Note: origin header is added dynamically per-request to avoid wildcard CORS
   'access-control-allow-methods': 'GET, OPTIONS',
   'access-control-allow-headers': 'content-type',
 };
 
+// Basic in-memory rate limiting (best-effort; ephemeral in serverless env)
+const ALLOWED_ORIGINS = [
+  'https://toxicbro.pages.dev',
+  'https://www.toxicbro.pages.dev',
+  'http://localhost:5173',
+];
+const RATE_LIMIT_WINDOW = 60 * 1000; // 1 minute
+const RATE_LIMIT_MAX = 60; // max requests per IP per window
+const rateLimitMap = new Map(); // ip -> { count, start }
+
+function getAllowedOrigin(request) {
+  try {
+    const origin = request.headers.get('origin');
+    if (!origin) return null;
+    if (ALLOWED_ORIGINS.includes(origin)) return origin;
+    // allow same-origin requests without an explicit origin header
+    const url = new URL(origin);
+    if (url.hostname && url.hostname.endsWith('pages.dev')) return origin;
+    return null;
+  } catch (e) {
+    return null;
+  }
+}
+
+function checkRateLimit(request) {
+  const ip = request.headers.get('cf-connecting-ip') || request.headers.get('x-forwarded-for') || 'unknown';
+  const now = Date.now();
+  const entry = rateLimitMap.get(ip) || { count: 0, start: now };
+  if (now - entry.start > RATE_LIMIT_WINDOW) {
+    entry.count = 0;
+    entry.start = now;
+  }
+  entry.count += 1;
+  rateLimitMap.set(ip, entry);
+  if (entry.count > RATE_LIMIT_MAX) {
+    return { limited: true, retryAfter: Math.ceil((entry.start + RATE_LIMIT_WINDOW - now) / 1000) };
+  }
+  return { limited: false };
+}
+
 // Handle OPTIONS request for CORS
-export async function onRequestOptions() {
+export async function onRequestOptions(context) {
+  const allowedOrigin = getAllowedOrigin(context.request);
+  const cors = {
+    'access-control-allow-origin': allowedOrigin || 'null',
+  };
+
   return new Response(null, {
     status: 204,
-    headers: jsonHeaders,
+    headers: {
+      ...jsonHeaders,
+      ...cors,
+    },
   });
 }
 
 // Main GET request handler
 export async function onRequestGet(context) {
   const { env } = context;
+
+  // Basic rate limiting
+  const rl = checkRateLimit(context.request);
+  if (rl.limited) {
+    return jsonResponse({ error: 'rate_limited', message: 'Rate limit exceeded' }, 429, { 'retry-after': String(rl.retryAfter) });
+  }
 
   try {
     // Get API keys with fallback support
@@ -67,19 +121,31 @@ export async function onRequestGet(context) {
       throw lastError || new Error('All API keys failed');
     }
 
+    const allowedOrigin = getAllowedOrigin(context.request);
+    const cors = {
+      'access-control-allow-origin': allowedOrigin || 'null',
+    };
+
     return jsonResponse(data, 200, {
       'x-youtube-api-status': 'success',
       'x-cache-age': '0',
+      ...cors,
     });
 
   } catch (error) {
     console.error('YouTube API error:', error.message);
+    const allowedOrigin = getAllowedOrigin(context.request);
+    const cors = {
+      'access-control-allow-origin': allowedOrigin || 'null',
+    };
+
     return jsonResponse({
       error: 'YouTube API error',
       message: error.message,
       timestamp: new Date().toISOString(),
     }, 502, {
       'x-youtube-api-status': 'error',
+      ...cors,
     });
   }
 }

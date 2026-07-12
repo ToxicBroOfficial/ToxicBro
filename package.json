@@ -1,4 +1,11 @@
 {
+  "name": "toxicbro-site",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "generate-sitemap": "node ./scripts/generate-sitemap.js",
+    "update-seo-data": "node ./scripts/update-seo-data.js"
+  },
   "dependencies": {
     "axios": "^1.18.1"
   }

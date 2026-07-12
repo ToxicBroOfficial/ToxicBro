@@ -25,6 +25,7 @@ const RSS_URL = `https://www.youtube.com/feeds/videos.xml?channel_id=${CHANNEL_I
 // Paths to output files
 const VIDEOS_FILE = path.join(__dirname, '../../videos.json');
 const CHANNEL_FILE = path.join(__dirname, '../../channel.json');
+const SITEMAP_FILE = path.join(__dirname, '../../sitemap.xml');
 const STATE_FILE = path.join(__dirname, '../../.github/scripts/state.json');
 
 // API keys from GitHub Secrets
@@ -65,6 +66,81 @@ function saveState(state) {
   } catch (err) {
     console.error(`❌ Could not save state: ${err.message}`);
   }
+}
+
+function generateSitemap() {
+  try {
+    const videosData = loadJsonFile(path.join(__dirname, '../../videos.json')) || { videos: [] };
+    const channelData = loadJsonFile(path.join(__dirname, '../../channel.json')) || { stats: {}, updatedAt: new Date().toISOString() };
+    const videos = Array.isArray(videosData.videos) ? videosData.videos : [];
+
+    const urls = [
+      {
+        loc: 'https://toxicbro.pages.dev/',
+        lastmod: formatDate(channelData.updatedAt || videosData.updatedAt),
+        changefreq: 'weekly',
+        priority: '1.0',
+      },
+      {
+        loc: 'https://toxicbro.pages.dev/#videos',
+        lastmod: formatDate(videos[0]?.published),
+        changefreq: 'weekly',
+        priority: '0.9',
+      },
+      {
+        loc: 'https://toxicbro.pages.dev/#about',
+        lastmod: formatDate(channelData.updatedAt || videosData.updatedAt),
+        changefreq: 'monthly',
+        priority: '0.8',
+      },
+      {
+        loc: 'https://toxicbro.pages.dev/#community',
+        lastmod: formatDate(channelData.updatedAt || videosData.updatedAt),
+        changefreq: 'monthly',
+        priority: '0.8',
+      },
+      {
+        loc: 'https://toxicbro.pages.dev/#contact',
+        lastmod: formatDate(channelData.updatedAt || videosData.updatedAt),
+        changefreq: 'monthly',
+        priority: '0.7',
+      },
+    ];
+
+    for (const video of videos) {
+      if (!video?.id) continue;
+      urls.push({
+        loc: `https://www.youtube.com/watch?v=${video.id}`,
+        lastmod: formatDate(video.published),
+        changefreq: 'monthly',
+        priority: '0.6',
+      });
+    }
+
+    const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls
+      .map((url) => `  <url>\n    <loc>${url.loc}</loc>\n    <lastmod>${url.lastmod}</lastmod>\n    <changefreq>${url.changefreq}</changefreq>\n    <priority>${url.priority}</priority>\n  </url>`)
+      .join('\n')}\n</urlset>\n`;
+
+    fs.writeFileSync(SITEMAP_FILE, xml, 'utf8');
+    console.log(`✅ Generated sitemap: ${path.basename(SITEMAP_FILE)} (${urls.length} URLs)`);
+  } catch (err) {
+    console.error(`❌ Could not generate sitemap: ${err.message}`);
+  }
+}
+
+function loadJsonFile(filePath) {
+  try {
+    if (!fs.existsSync(filePath)) return null;
+    return JSON.parse(fs.readFileSync(filePath, 'utf8'));
+  } catch (err) {
+    console.warn(`⚠️  Could not load ${path.basename(filePath)}: ${err.message}`);
+    return null;
+  }
+}
+
+function formatDate(dateString) {
+  if (!dateString) return new Date().toISOString().slice(0, 10);
+  return new Date(dateString).toISOString().slice(0, 10);
 }
 
 /**
@@ -361,6 +437,12 @@ async function main() {
       if (!filesToCommit.includes(CHANNEL_FILE)) {
         filesToCommit.push(CHANNEL_FILE);
       }
+    }
+
+    // ===== STEP 5: GENERATE SITEMAP (ALWAYS, AFTER UPDATE) =====
+    generateSitemap();
+    if (!filesToCommit.includes(SITEMAP_FILE)) {
+      filesToCommit.push(SITEMAP_FILE);
     }
 
     // ===== FINAL SUMMARY =====

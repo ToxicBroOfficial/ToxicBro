@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ToxicBro | Featured Achievements | Subscriber Milestones</title>
+  <meta name="description" content="Track ToxicBro's growing YouTube milestones, including subscriber achievements and the next targets on the path to new goals." />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://toxicbro.pages.dev/pages/achievements.html" />
+  <meta property="og:title" content="ToxicBro | Featured Achievements" />
+  <meta property="og:description" content="See ToxicBro's subscriber milestones, progress toward new goals, and featured achievements as the channel grows." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://toxicbro.pages.dev/pages/achievements.html" />
+  <meta property="og:image" content="https://yt3.ggpht.com/LmB6wCkQeORoiLnKTcTL1xAbI1-5qGQz4pyFkwEQgmH0Swm9uN6Zj2sTZmqRSPAH3EgV-i9lng=s800-c-k-c0x00ffffff-no-rj" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:site" content="@ToxicBroYT" />
+  <meta name="twitter:image" content="https://yt3.ggpht.com/LmB6wCkQeORoiLnKTcTL1xAbI1-5qGQz4pyFkwEQgmH0Swm9uN6Zj2sTZmqRSPAH3EgV-i9lng=s800-c-k-c0x00ffffff-no-rj" />
+  <meta name="twitter:image:alt" content="ToxicBro - Subscriber milestones and achievements" />
+  <meta name="twitter:creator" content="@ToxicBroYT" />
+  <meta property="og:site_name" content="ToxicBro Official" />
+  <meta property="og:locale" content="en_BD" />
+  <style>
+    :root{ --r:#E8001C; --bg:#050505; --card:#0f0f10; --text:#f4f4f4; --muted:#a5a5a5; --border:rgba(255,255,255,.12); }
+    *{box-sizing:border-box} body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.7} a{color:inherit;text-decoration:none} .wrap{max-width:1100px;margin:0 auto;padding:24px} .top-link{display:inline-flex;align-items:center;gap:8px;margin:24px 24px 0;padding:10px 16px;border-radius:999px;background:var(--r);color:white;font-weight:700;text-decoration:none}.hero{padding:24px 0 18px} .hero h1{font-size:clamp(2rem,4vw,3rem);margin:0 0 10px;line-height:1.1} .hero p{color:var(--muted);max-width:740px} .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px} .card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:24px} .milestone{display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:1px solid var(--border)} .milestone:last-child{border-bottom:none} .badge{display:inline-block;margin-top:8px;padding:6px 10px;border-radius:999px;background:rgba(232,0,28,.16);color:#fff;font-size:.75rem;text-transform:uppercase;letter-spacing:.08em} .progress{height:10px;border-radius:999px;background:rgba(255,255,255,.1);overflow:hidden;margin-top:10px}. .progress > span{display:block;height:100%;background:linear-gradient(90deg,var(--r),#ff6a3d);width:0%;transition:width .6s ease} .small{color:var(--muted)} .btn{display:inline-block;margin-top:16px;padding:10px 16px;border-radius:999px;background:var(--r);color:white;font-weight:700} @media (max-width:900px){.grid{grid-template-columns:1fr}} @media (max-width:640px){.wrap{padding:16px}.top-link{margin:16px 16px 0}.hero{padding:18px 0 16px}.card{padding:18px}.milestone{flex-direction:column;align-items:flex-start;gap:6px}.btn{display:flex;justify-content:center;width:100%}}
+  </style>
+</head>
+<body>
+  <a class="top-link" href="../index.html">← Visit Home</a>
+
+  <main class="wrap">
+    <section class="hero">
+      <h1>Featured achievements and milestone tracking</h1>
+      <p>This page highlights ToxicBro’s channel growth and subscriber milestones. The progress is calculated automatically from the latest public YouTube stats and updated as the channel grows.</p>
+    </section>
+
+    <section class="grid">
+      <div class="card">
+        <h2>Current progress</h2>
+        <div id="current-stats" class="small">Loading latest subscriber milestone data…</div>
+        <div class="progress" aria-hidden="true"><span id="progress-bar"></span></div>
+        <p id="progress-text" class="small" style="margin-top:10px;">Please wait while the latest public stats are loaded.</p>
+        <a class="btn" href="https://www.youtube.com/@ToxicBroYT/?sub_confirmation=1" target="_blank" rel="noopener noreferrer">Support the growth</a>
+      </div>
+      <div class="card">
+        <h2>Milestone targets</h2>
+        <div id="milestones"></div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const milestoneTargets = [1000, 10000, 20000, 50000, 100000];
+    const fallbackCount = 16600;
+    const channelJsonUrls = ['../channel.json', '/channel.json', './channel.json'];
+    const cacheKey = 'toxicbro_stats_cache';
+    const cacheTtlHours = 24;
+
+    function readStatsCache() {
+      try {
+        const cached = localStorage.getItem(cacheKey);
+        if (!cached) return null;
+
+        const data = JSON.parse(cached);
+        if (!data || typeof data !== 'object') return null;
+
+        const ageHours = (Date.now() - new Date(data.updatedAt || 0).getTime()) / (1000 * 60 * 60);
+        if (ageHours > cacheTtlHours) return null;
+
+        return data;
+      } catch (error) {
+        return null;
+      }
+    }
+
+    function writeStatsCache(statsData) {
+      try {
+        const current = readStatsCache() || {};
+        const updated = {
+          ...current,
+          ...statsData,
+          updatedAt: new Date().toISOString(),
+        };
+        localStorage.setItem(cacheKey, JSON.stringify(updated));
+      } catch (error) {
+        console.warn('Could not save achievements cache:', error);
+      }
+    }
+
+    function renderMilestones(currentCount) {
+      const nextTarget = milestoneTargets.find((value) => currentCount < value) || milestoneTargets[milestoneTargets.length - 1];
+      const percent = Math.min(100, Math.round((currentCount / nextTarget) * 100));
+      const remaining = Math.max(0, nextTarget - currentCount);
+
+      const milestonesHtml = milestoneTargets.map((value) => {
+        const reached = currentCount >= value;
+        const label = value.toLocaleString();
+        return `
+          <div class="milestone">
+            <div>
+              <strong>${label} subscribers</strong>
+              <div class="badge">${reached ? 'Reached milestone' : value === nextTarget ? 'Next target' : 'Upcoming target'}</div>
+            </div>
+            <div>${reached ? 'Completed' : `${Math.max(0, value - currentCount).toLocaleString()} left`}</div>
+          </div>`;
+      }).join('');
+
+      const statsEl = document.getElementById('current-stats');
+      const progressEl = document.getElementById('progress-bar');
+      const progressTextEl = document.getElementById('progress-text');
+      const milestonesEl = document.getElementById('milestones');
+
+      if (statsEl) {
+        statsEl.innerHTML = `Latest public subscriber count: <strong>${currentCount.toLocaleString()}</strong>.<br>Current next milestone: <strong>${nextTarget.toLocaleString()}</strong> subscribers.`;
+      }
+      if (progressEl) progressEl.style.width = `${percent}%`;
+      if (progressTextEl) {
+        progressTextEl.textContent = `${percent}% of the ${nextTarget.toLocaleString()} goal is complete. ${remaining.toLocaleString()} subscribers left to reach the next milestone.`;
+      }
+      if (milestonesEl) milestonesEl.innerHTML = milestonesHtml;
+    }
+
+    async function fetchChannelData() {
+      for (const url of channelJsonUrls) {
+        try {
+          const response = await fetch(url, { cache: 'no-cache' });
+          if (!response.ok) continue;
+          const data = await response.json();
+          if (data && typeof data === 'object') return data;
+        } catch (error) {
+          continue;
+        }
+      }
+      return { stats: { subscriberCount: fallbackCount } };
+    }
+
+    async function loadStats() {
+      const cached = readStatsCache();
+      if (cached && typeof cached.subscribers === 'number') {
+        renderMilestones(cached.subscribers);
+      }
+
+      try {
+        const data = await fetchChannelData();
+        const rawCount = data?.stats?.subscriberCount ?? data?.subscriberCount ?? data?.subscribers ?? fallbackCount;
+        const current = Number.parseInt(String(rawCount).replace(/[^0-9]/g, ''), 10) || 0;
+
+        if (current > 0) {
+          writeStatsCache({ subscribers: current });
+          renderMilestones(current);
+        }
+      } catch (error) {
+        const statsEl = document.getElementById('current-stats');
+        const progressTextEl = document.getElementById('progress-text');
+        if (statsEl && !statsEl.textContent?.includes('Latest public subscriber count')) {
+          statsEl.textContent = 'Unable to load the latest milestone data right now.';
+        }
+        if (progressTextEl) {
+          progressTextEl.textContent = 'The milestone tracker will refresh the next time the channel data is available.';
+        }
+      }
+    }
+
+    window.addEventListener('storage', (event) => {
+      if (event.key === cacheKey) {
+        const cached = readStatsCache();
+        if (cached && typeof cached.subscribers === 'number') {
+          renderMilestones(cached.subscribers);
+        }
+      }
+    });
+
+    loadStats();
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://toxicbro.pages.dev/" },
+      { "@type": "ListItem", "position": 2, "name": "Achievements", "item": "https://toxicbro.pages.dev/pages/achievements.html" }
+    ]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "ToxicBro Featured Achievements",
+    "url": "https://toxicbro.pages.dev/pages/achievements.html",
+    "description": "Subscriber milestone tracker and achievement page for ToxicBro's growing YouTube channel.",
+    "about": {
+      "@type": "Person",
+      "name": "ToxicBro",
+      "alternateName": "Abdul Gaffar Patowary",
+      "jobTitle": ["Professional Gamer", "Gaming YouTuber"]
+    }
+  }
+  </script>
+</body>
+</html>

@@ -29,10 +29,17 @@ jobs:
         run: npm install axios
 
       - name: Fetch YouTube data (OPTIMIZED)
+        if: ${{ secrets.YOUTUBE_API_KEY || secrets.YOUTUBE_API_KEY_FALLBACK }}
         env:
           YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
           YOUTUBE_API_KEY_FALLBACK: ${{ secrets.YOUTUBE_API_KEY_FALLBACK }}
         run: node .github/scripts/fetch-youtube-data.js
+
+      - name: Update SEO metadata
+        run: npm run update-seo-data
+
+      - name: Generate sitemap
+        run: npm run generate-sitemap
 
       - name: Check which files changed
         id: check_changes
@@ -61,6 +68,12 @@ jobs:
             else
               echo "stats_changed=false" >> $GITHUB_OUTPUT
             fi
+
+            if git diff --name-only | grep -q "^sitemap.xml"; then
+              echo "sitemap_changed=true" >> $GITHUB_OUTPUT
+            else
+              echo "sitemap_changed=false" >> $GITHUB_OUTPUT
+            fi
             
             if git diff --name-only | grep -q "^\.github/scripts/state\.json"; then
               echo "state_changed=true" >> $GITHUB_OUTPUT
@@ -80,6 +93,8 @@ jobs:
             MESSAGE="🤖 Auto-update: New video + updated stats ($(date -u +'%Y-%m-%d %H:%M:%S UTC'))"
           elif [ "${{ steps.check_changes.outputs.video_changed }}" == "true" ]; then
             MESSAGE="📹 Auto-update: New video detected ($(date -u +'%Y-%m-%d %H:%M:%S UTC'))"
+          elif [ "${{ steps.check_changes.outputs.sitemap_changed }}" == "true" ]; then
+            MESSAGE="🗺️ Auto-update: Sitemap refreshed ($(date -u +'%Y-%m-%d %H:%M:%S UTC'))"
           else
             MESSAGE="📊 Auto-update: Subscriber stats refreshed ($(date -u +'%Y-%m-%d %H:%M:%S UTC'))"
           fi
@@ -95,6 +110,7 @@ jobs:
           echo "================="
           echo "Video updated: ${{ steps.check_changes.outputs.video_changed }}"
           echo "Stats updated: ${{ steps.check_changes.outputs.stats_changed }}"
+          echo "Sitemap updated: ${{ steps.check_changes.outputs.sitemap_changed }}"
           echo "State updated: ${{ steps.check_changes.outputs.state_changed }}"
           echo "Cloudflare Pages will auto-deploy on push"
 
