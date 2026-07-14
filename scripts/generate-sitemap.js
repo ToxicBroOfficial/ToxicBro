@@ -6,6 +6,7 @@ const rootDir = path.join(__dirname, '..');
 const sitemapPath = path.join(rootDir, 'sitemap.xml');
 const videosPath = path.join(rootDir, 'videos.json');
 const channelPath = path.join(rootDir, 'channel.json');
+const mainChannelUrl = 'https://www.youtube.com/@ToxicBroYT/';
 
 function readJson(filePath) {
   if (!fs.existsSync(filePath)) return null;
@@ -27,6 +28,12 @@ const urls = [
     lastmod: formatDate(channelData.updatedAt || videosData.updatedAt),
     changefreq: 'weekly',
     priority: '1.0',
+  },
+  {
+    loc: mainChannelUrl,
+    lastmod: formatDate(channelData.updatedAt || videosData.updatedAt),
+    changefreq: 'weekly',
+    priority: '0.95',
   },
   {
     loc: 'https://toxicbro.pages.dev/#videos',
@@ -78,13 +85,25 @@ const urls = [
   },
 ];
 
+function inferVideoType(video) {
+  const title = `${video?.title || ''} ${video?.description || ''}`.toLowerCase();
+  if (video?.type === 'live' || title.includes(' live ') || title.includes('live') || title.includes('stream')) {
+    return 'live';
+  }
+  if (video?.type === 'upcoming' || title.includes('upcoming') || title.includes('premiere')) {
+    return 'upcoming';
+  }
+  return 'video';
+}
+
 for (const video of videos) {
   if (!video?.id) continue;
+  const type = inferVideoType(video);
   urls.push({
     loc: `https://www.youtube.com/watch?v=${video.id}`,
     lastmod: formatDate(video.published),
-    changefreq: 'monthly',
-    priority: '0.6',
+    changefreq: type === 'live' ? 'daily' : type === 'upcoming' ? 'weekly' : 'monthly',
+    priority: type === 'live' ? '0.8' : type === 'upcoming' ? '0.7' : '0.6',
   });
 }
 

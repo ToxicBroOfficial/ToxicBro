@@ -21,6 +21,7 @@ const fetch = globalThis.fetch;
 const CHANNEL_ID = 'UCXG8sste5hX3P26gWayrlkg';
 const MAX_RESULTS = 50;
 const RSS_URL = `https://www.youtube.com/feeds/videos.xml?channel_id=${CHANNEL_ID}`;
+const MAIN_CHANNEL_URL = 'https://www.youtube.com/@ToxicBroYT/';
 
 // Paths to output files
 const VIDEOS_FILE = path.join(__dirname, '../../videos.json');
@@ -80,6 +81,12 @@ function generateSitemap() {
         lastmod: formatDate(channelData.updatedAt || videosData.updatedAt),
         changefreq: 'weekly',
         priority: '1.0',
+      },
+      {
+        loc: MAIN_CHANNEL_URL,
+        lastmod: formatDate(channelData.updatedAt || videosData.updatedAt),
+        changefreq: 'weekly',
+        priority: '0.95',
       },
       {
         loc: 'https://toxicbro.pages.dev/#videos',
@@ -220,6 +227,32 @@ async function fetchChannelStats(apiKey) {
  * Fetch recent videos using Search API
  */
 async function fetchRecentVideos(apiKey, limit) {
+  const searchTypes = [
+    { eventType: undefined, count: Math.max(4, Math.floor(limit * 0.7)) },
+    { eventType: 'live', count: Math.max(3, Math.ceil(limit * 0.15)) },
+    { eventType: 'upcoming', count: Math.max(3, Math.ceil(limit * 0.15)) },
+  ];
+
+  const videoIds = [];
+  for (const searchType of searchTypes) {
+    const ids = await fetchSearchResultIds(apiKey, searchType.count, searchType.eventType);
+    ids.forEach(id => {
+      if (!videoIds.includes(id)) videoIds.push(id);
+    });
+  }
+
+  if (videoIds.length === 0) {
+    console.warn('⚠️  No valid video IDs found');
+    return [];
+  }
+
+  const videos = await fetchVideoDetails(apiKey, videoIds);
+  return videos
+    .sort((a, b) => new Date(b.published) - new Date(a.published))
+    .slice(0, limit);
+}
+
+async function fetchSearchResultIds(apiKey, limit, eventType) {
   const url = new URL('https://www.googleapis.com/youtube/v3/search');
   url.searchParams.set('part', 'snippet,id');
   url.searchParams.set('channelId', CHANNEL_ID);
@@ -227,6 +260,10 @@ async function fetchRecentVideos(apiKey, limit) {
   url.searchParams.set('type', 'video');
   url.searchParams.set('maxResults', String(limit));
   url.searchParams.set('key', apiKey);
+
+  if (eventType) {
+    url.searchParams.set('eventType', eventType);
+  }
 
   const response = await fetch(url.toString());
   if (!response.ok) {
@@ -243,18 +280,9 @@ async function fetchRecentVideos(apiKey, limit) {
     return [];
   }
 
-  // Extract video IDs from search results
-  const videoIds = data.items
+  return data.items
     .filter(item => item.id && item.id.kind === 'youtube#video' && item.id.videoId)
     .map(item => item.id.videoId);
-
-  if (videoIds.length === 0) {
-    console.warn('⚠️  No valid video IDs found');
-    return [];
-  }
-
-  // Fetch full video details including statistics
-  return await fetchVideoDetails(apiKey, videoIds);
 }
 
 /**
@@ -288,11 +316,20 @@ async function fetchVideoDetails(apiKey, videoIds) {
       const video = data.items.find(item => item.id === id);
       if (!video) return null;
 
+      const broadcastType = video.snippet?.liveBroadcastContent;
+      let type = 'video';
+      if (broadcastType === 'live') {
+        type = 'live';
+      } else if (broadcastType === 'upcoming') {
+        type = 'upcoming';
+      }
+
       return {
         id,
         title: video.snippet?.title || 'Untitled',
         published: video.snippet?.publishedAt || new Date().toISOString(),
         views: video.statistics?.viewCount || '0',
+        type,
       };
     })
     .filter(v => v !== null);
