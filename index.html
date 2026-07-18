@@ -1161,6 +1161,10 @@
       gap:1.25rem;
     }
 
+    .video-card-item{
+      display:block;
+    }
+
     .video-card{
       background:var(--card);
       border:1px solid var(--border2);
@@ -1173,6 +1177,7 @@
       position:relative;
       backdrop-filter:blur(10px);
       border:2px solid var(--border-glass);
+      height:100%;
     }
     .video-card::after{
       content:'';position:absolute;inset:0;z-index:1;
@@ -3881,34 +3886,36 @@ function videoCardHTML(v, idx, featured = false) {
   const title = escapeHTML(v.title);
   const videoId = encodeURIComponent(v.id);
   return `
-    <a href="https://www.youtube.com/watch?v=${videoId}"
-       target="_blank" rel="noopener noreferrer"
-       class="video-card sr"
-       style="transition-delay:${idx * 0.07}s"
-       aria-label="Watch ${title} on YouTube"
-       itemprop="itemListElement"
-       itemscope itemtype="https://schema.org/ListItem">
-      <meta itemprop="position" content="${idx + 1}"/>
-      <div class="vthumb">
-        <img src="https://i.ytimg.com/vi/${videoId}/hqdefault.jpg"
-             alt="${title} - ToxicBro Gaming"
-             loading="lazy" width="320" height="180"
-             itemprop="image"
-             onerror="this.src='https://i.ytimg.com/vi/${videoId}/mqdefault.jpg'"/>
-        <div class="vplay" aria-hidden="true">
-          <div class="vplay-btn">
-            <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+    <div class="video-card-item" role="listitem">
+      <a href="https://www.youtube.com/watch?v=${videoId}"
+         target="_blank" rel="noopener noreferrer"
+         class="video-card sr"
+         style="transition-delay:${idx * 0.07}s"
+         aria-label="Watch ${title} on YouTube"
+         itemprop="itemListElement"
+         itemscope itemtype="https://schema.org/ListItem">
+        <meta itemprop="position" content="${idx + 1}"/>
+        <div class="vthumb">
+          <img src="https://i.ytimg.com/vi/${videoId}/hqdefault.jpg"
+               alt="${title} - ToxicBro Gaming"
+               loading="lazy" width="320" height="180"
+               itemprop="image"
+               onerror="this.src='https://i.ytimg.com/vi/${videoId}/mqdefault.jpg'"/>
+          <div class="vplay" aria-hidden="true">
+            <div class="vplay-btn">
+              <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="vinfo">
-        <p class="vtitle" itemprop="name">${title}</p>
-        <p class="vmeta">
-          <span>${timeAgo(v.published)}</span>
-          ${v.views ? `<span class="vmeta-dot"></span><span>${fmtNum(v.views)} views</span>` : ''}
-        </p>
-      </div>
-    </a>`;
+        <div class="vinfo">
+          <p class="vtitle" itemprop="name">${title}</p>
+          <p class="vmeta">
+            <span>${timeAgo(v.published)}</span>
+            ${v.views ? `<span class="vmeta-dot"></span><span>${fmtNum(v.views)} views</span>` : ''}
+          </p>
+        </div>
+      </a>
+    </div>`;
 }
 
 /* ══════════════════
