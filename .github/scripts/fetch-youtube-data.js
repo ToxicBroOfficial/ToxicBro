@@ -21,7 +21,7 @@ const fetch = globalThis.fetch;
 const CHANNEL_ID = 'UCXG8sste5hX3P26gWayrlkg';
 const MAX_RESULTS = 50;
 const RSS_URL = `https://www.youtube.com/feeds/videos.xml?channel_id=${CHANNEL_ID}`;
-const MAIN_CHANNEL_URL = 'https://www.youtube.com/@ToxicBroYT/';
+const SITE_BASE_URL = 'https://toxicbro.pages.dev';
 
 // Paths to output files
 const VIDEOS_FILE = path.join(__dirname, '../../videos.json');
@@ -73,56 +73,52 @@ function generateSitemap() {
   try {
     const videosData = loadJsonFile(path.join(__dirname, '../../videos.json')) || { videos: [] };
     const channelData = loadJsonFile(path.join(__dirname, '../../channel.json')) || { stats: {}, updatedAt: new Date().toISOString() };
-    const videos = Array.isArray(videosData.videos) ? videosData.videos : [];
+    const lastmod = formatDate(channelData.updatedAt || videosData.updatedAt);
 
     const urls = [
       {
-        loc: 'https://toxicbro.pages.dev/',
-        lastmod: formatDate(channelData.updatedAt || videosData.updatedAt),
+        loc: `${SITE_BASE_URL}/`,
+        lastmod,
         changefreq: 'weekly',
         priority: '1.0',
       },
       {
-        loc: MAIN_CHANNEL_URL,
-        lastmod: formatDate(channelData.updatedAt || videosData.updatedAt),
-        changefreq: 'weekly',
-        priority: '0.95',
-      },
-      {
-        loc: 'https://toxicbro.pages.dev/#videos',
-        lastmod: formatDate(videos[0]?.published),
-        changefreq: 'weekly',
-        priority: '0.9',
-      },
-      {
-        loc: 'https://toxicbro.pages.dev/#about',
-        lastmod: formatDate(channelData.updatedAt || videosData.updatedAt),
+        loc: `${SITE_BASE_URL}/pages/about.html`,
+        lastmod,
         changefreq: 'monthly',
         priority: '0.8',
       },
       {
-        loc: 'https://toxicbro.pages.dev/#community',
-        lastmod: formatDate(channelData.updatedAt || videosData.updatedAt),
+        loc: `${SITE_BASE_URL}/pages/achievements.html`,
+        lastmod,
         changefreq: 'monthly',
         priority: '0.8',
       },
       {
-        loc: 'https://toxicbro.pages.dev/#contact',
-        lastmod: formatDate(channelData.updatedAt || videosData.updatedAt),
+        loc: `${SITE_BASE_URL}/pages/biography.html`,
+        lastmod,
+        changefreq: 'monthly',
+        priority: '0.8',
+      },
+      {
+        loc: `${SITE_BASE_URL}/pages/contact.html`,
+        lastmod,
         changefreq: 'monthly',
         priority: '0.7',
       },
-    ];
-
-    for (const video of videos) {
-      if (!video?.id) continue;
-      urls.push({
-        loc: `https://www.youtube.com/watch?v=${video.id}`,
-        lastmod: formatDate(video.published),
+      {
+        loc: `${SITE_BASE_URL}/pages/privacy-policy.html`,
+        lastmod,
+        changefreq: 'yearly',
+        priority: '0.5',
+      },
+      {
+        loc: `${SITE_BASE_URL}/pages/disclaimer.html`,
+        lastmod,
         changefreq: 'monthly',
-        priority: '0.6',
-      });
-    }
+        priority: '0.5',
+      },
+    ];
 
     const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls
       .map((url) => `  <url>\n    <loc>${url.loc}</loc>\n    <lastmod>${url.lastmod}</lastmod>\n    <changefreq>${url.changefreq}</changefreq>\n    <priority>${url.priority}</priority>\n  </url>`)
