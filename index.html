@@ -4,7 +4,7 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover"/>
   <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self' https:; connect-src 'self' https://www.youtube.com https://i.ytimg.com https://api.allorigins.win; img-src 'self' data: https://yt3.ggpht.com https://i.ytimg.com; script-src 'self' 'unsafe-inline' https://www.youtube.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; frame-src https://www.youtube.com https://youtube.com;">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' https:; connect-src 'self' https://www.youtube.com https://i.ytimg.com https://api.allorigins.win https://static.cloudflareinsights.com https://*.cloudflareinsights.com; img-src 'self' data: https://yt3.ggpht.com https://i.ytimg.com; script-src 'self' 'unsafe-inline' https://www.youtube.com https://static.cloudflareinsights.com https://*.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; frame-src https://www.youtube.com https://youtube.com;">
 
   <title>ToxicBro Official | Bangladeshi Gamer &amp; YouTuber</title>
   <meta name="description" content="Official website of ToxicBro, a Bangladeshi gaming creator and YouTuber. Explore gameplay videos, creator achievements, biography, and the ToxicArmy community."/>
@@ -272,8 +272,6 @@
   ══════════════════════════════════════ -->
   <!-- Preload critical resources -->
   <link rel="preload" as="image" href="https://yt3.ggpht.com/LmB6wCkQeORoiLnKTcTL1xAbI1-5qGQz4pyFkwEQgmH0Swm9uN6Zj2sTZmqRSPAH3EgV-i9lng=s800-c-k-c0x00ffffff-no-rj" />
-  <link rel="preload" as="font" href="https://fonts.gstatic.com/s/bebasneue/v13/JTURjIg1_i6t8kCHKm45_cJD3gVD.woff2" type="font/woff2" crossorigin/>
-  <link rel="preload" as="font" href="https://fonts.gstatic.com/s/rajdhani/v13/LDIjapHQMg8j6kSrGgM6xV-gN2Z4.woff2" type="font/woff2" crossorigin/>
 
   <!-- DNS Prefetch for performance -->
   <link rel="dns-prefetch" href="https://www.youtube.com"/>
@@ -281,6 +279,8 @@
   <link rel="dns-prefetch" href="https://api.allorigins.win"/>
   <link rel="preconnect" href="https://www.youtube.com" crossorigin/>
   <link rel="preconnect" href="https://i.ytimg.com" crossorigin/>
+  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -3885,7 +3885,6 @@ function videoCardHTML(v, idx, featured = false) {
        target="_blank" rel="noopener noreferrer"
        class="video-card sr"
        style="transition-delay:${idx * 0.07}s"
-       role="listitem"
        aria-label="Watch ${title} on YouTube"
        itemprop="itemListElement"
        itemscope itemtype="https://schema.org/ListItem">
