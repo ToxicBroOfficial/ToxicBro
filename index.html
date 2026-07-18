@@ -225,7 +225,7 @@
         {
           "@type":"Question",
           "name":"Who is ToxicBro?",
-          "acceptedAnswer":{"@type":"Answer","text":"ToxicBro is a professional gamer from Bangladesh known for gameplay videos, channel updates, and the ToxicArmy gaming community."}
+          "acceptedAnswer":{"@type":"Answer","text":"ToxicBro is a Bangladeshi gaming creator and YouTuber known for his action-packed gameplay, funny commentary, and highly entertaining gaming videos. He plays a huge variety of fun and casual games for his community, the ToxicArmy!"}
         },
         {
           "@type":"Question",
@@ -2377,15 +2377,23 @@
       text-align:left;
     }
     .faq-item{
+      position:relative;
       border:1px solid rgba(232,0,28,0.22);
       background:linear-gradient(145deg,rgba(255,255,255,0.055),rgba(255,255,255,0.012));
       box-shadow:0 14px 42px rgba(0,0,0,0.22),inset 0 1px 0 rgba(255,255,255,0.07);
       clip-path:polygon(12px 0,100% 0,100% calc(100% - 12px),calc(100% - 12px) 100%,0 100%,0 12px);
       overflow:hidden;
+      transition:border-color 0.3s var(--ease-out),box-shadow 0.3s var(--ease-out),transform 0.3s var(--ease-out);
+    }
+    .faq-item:hover{transform:translateY(-2px);border-color:rgba(232,0,28,0.35)}
+    .faq-item.open{
+      border-color:rgba(232,0,28,0.7);
+      box-shadow:0 18px 50px rgba(232,0,28,0.18),0 16px 42px rgba(0,0,0,0.24),inset 0 1px 0 rgba(255,255,255,0.08);
     }
     .faq-question{
+      width:100%;
       margin:0;
-      padding:1rem 1.15rem 0.2rem;
+      padding:1rem 3.1rem 1rem 1.15rem;
       font-family:var(--font-ui);
       font-size:clamp(0.88rem,2.5vw,1rem);
       font-weight:800;
@@ -2393,13 +2401,65 @@
       line-height:1.35;
       color:#fff;
       text-transform:uppercase;
+      text-align:left;
+      background:transparent;
+      border:none;
+      cursor:pointer;
+      position:relative;
+    }
+    .faq-question::after{
+      content:'+';
+      position:absolute;
+      top:50%;
+      right:1.1rem;
+      width:1.4rem;
+      height:1.4rem;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      transform:translateY(-50%);
+      color:var(--r);
+      font-size:1.25rem;
+      line-height:1;
+      transition:transform 0.35s var(--ease-spring),color 0.25s var(--ease-out);
+    }
+    .faq-item.open .faq-question::after{
+      content:'−';
+      transform:translateY(-50%) rotate(180deg);
+      color:#fff;
+    }
+    .faq-question:focus-visible{
+      outline:2px solid var(--r2);
+      outline-offset:-2px;
+      background:rgba(232,0,28,0.06);
+    }
+    .faq-answer-wrap{
+      display:grid;
+      grid-template-rows:0fr;
+      transition:grid-template-rows 0.38s var(--ease-out),opacity 0.28s var(--ease-out);
+      opacity:0;
+    }
+    .faq-item.open .faq-answer-wrap{
+      grid-template-rows:1fr;
+      opacity:1;
+    }
+    .faq-answer-inner{
+      overflow:hidden;
     }
     .faq-answer{
       margin:0;
-      padding:0.45rem 1.15rem 1.05rem;
+      padding:0 1.15rem 1.05rem;
       color:rgba(239,239,239,0.72);
       font-size:clamp(0.82rem,2.2vw,0.95rem);
       line-height:1.7;
+      transform:translateY(-8px);
+      opacity:0;
+      transition:transform 0.35s var(--ease-out),opacity 0.25s var(--ease-out),padding 0.35s var(--ease-out);
+    }
+    .faq-item.open .faq-answer{
+      padding:0.05rem 1.15rem 1.05rem;
+      transform:translateY(0);
+      opacity:1;
     }
 
     @media(max-width:768px){
@@ -3315,32 +3375,60 @@ if (tickerInner) {
 
     <div class="faq-grid sr" data-delay="3">
       <article class="faq-item">
-        <h3 class="faq-question">Who is ToxicBro?</h3>
-        <p class="faq-answer">ToxicBro is a professional gamer from Bangladesh known for gameplay videos, channel updates, and the ToxicArmy gaming community.</p>
+        <button class="faq-question" type="button" aria-expanded="false">Who is ToxicBro?</button>
+        <div class="faq-answer-wrap" aria-hidden="true">
+          <div class="faq-answer-inner">
+            <p class="faq-answer">ToxicBro is a Bangladeshi gaming creator and YouTuber known for his action-packed gameplay, funny commentary, and highly entertaining gaming videos. He plays a huge variety of fun and casual games for his community, the ToxicArmy!</p>
+          </div>
+        </div>
       </article>
       <article class="faq-item">
-        <h3 class="faq-question">What is ToxicArmy?</h3>
-        <p class="faq-answer">ToxicArmy is the gaming community around ToxicBro where fans follow gameplay videos, channel updates, and community activity.</p>
+        <button class="faq-question" type="button" aria-expanded="false">What is ToxicArmy?</button>
+        <div class="faq-answer-wrap" aria-hidden="true">
+          <div class="faq-answer-inner">
+            <p class="faq-answer">ToxicArmy is the gaming community around ToxicBro where fans follow gameplay videos, channel updates, and community activity.</p>
+          </div>
+        </div>
       </article>
       <article class="faq-item">
-        <h3 class="faq-question">Where can I watch ToxicBro gaming videos?</h3>
-        <p class="faq-answer">You can watch all ToxicBro gaming videos on YouTube at https://www.youtube.com/@ToxicBroYT/</p>
+        <button class="faq-question" type="button" aria-expanded="false">Where can I watch ToxicBro gaming videos?</button>
+        <div class="faq-answer-wrap" aria-hidden="true">
+          <div class="faq-answer-inner">
+            <p class="faq-answer">You can watch all ToxicBro gaming videos on YouTube at https://www.youtube.com/@ToxicBroYT/</p>
+          </div>
+        </div>
       </article>
       <article class="faq-item">
-        <h3 class="faq-question">Where can I find ToxicBro's official profile links?</h3>
-        <p class="faq-answer">ToxicBro's official platform links are available on this website, including YouTube, TikTok, Instagram, Discord, the official website, and connected legacy profile links.</p>
+        <button class="faq-question" type="button" aria-expanded="false">Where can I find ToxicBro's official profile links?</button>
+        <div class="faq-answer-wrap" aria-hidden="true">
+          <div class="faq-answer-inner">
+            <p class="faq-answer">ToxicBro's official platform links are available on this website, including YouTube, TikTok, Instagram, Discord, the official website, and connected legacy profile links.</p>
+          </div>
+        </div>
       </article>
       <article class="faq-item">
-        <h3 class="faq-question">What type of games does ToxicBro play?</h3>
-        <p class="faq-answer">ToxicBro focuses on gameplay videos, gaming shorts, channel updates, and entertainment for the ToxicArmy gaming community.</p>
+        <button class="faq-question" type="button" aria-expanded="false">What type of games does ToxicBro play?</button>
+        <div class="faq-answer-wrap" aria-hidden="true">
+          <div class="faq-answer-inner">
+            <p class="faq-answer">ToxicBro focuses on gameplay videos, gaming shorts, channel updates, and entertainment for the ToxicArmy gaming community.</p>
+          </div>
+        </div>
       </article>
       <article class="faq-item">
-        <h3 class="faq-question">How often does ToxicBro upload content?</h3>
-        <p class="faq-answer">ToxicBro regularly uploads gameplay videos, shorts, and channel updates. Subscribe and follow to stay updated with the latest uploads.</p>
+        <button class="faq-question" type="button" aria-expanded="false">How often does ToxicBro upload content?</button>
+        <div class="faq-answer-wrap" aria-hidden="true">
+          <div class="faq-answer-inner">
+            <p class="faq-answer">ToxicBro regularly uploads gameplay videos, shorts, and channel updates. Subscribe and follow to stay updated with the latest uploads.</p>
+          </div>
+        </div>
       </article>
       <article class="faq-item">
-        <h3 class="faq-question">Is this the official website of ToxicBro?</h3>
-        <p class="faq-answer">Yes. ToxicBro is an official gaming creator from Bangladesh with an active YouTube channel, social links, and a dedicated community hub on this website.</p>
+        <button class="faq-question" type="button" aria-expanded="false">Is this the official website of ToxicBro?</button>
+        <div class="faq-answer-wrap" aria-hidden="true">
+          <div class="faq-answer-inner">
+            <p class="faq-answer">Yes. ToxicBro is an official gaming creator from Bangladesh with an active YouTube channel, social links, and a dedicated community hub on this website.</p>
+          </div>
+        </div>
       </article>
     </div>
   </div>
@@ -3416,6 +3504,7 @@ window.addEventListener('load', () => {
     document.body.style.overflow = '';
     initAnimations();
     initVisualEffects();
+      initFaqAccordion();
 
     // Verify all sections are loaded
     const sections = ['home', 'featured', 'videos', 'about', 'community', 'contact'];
@@ -3680,6 +3769,37 @@ function initVisualEffects() {
   });
 
   dynamicObserver.observe(document.body, { childList:true, subtree:true });
+}
+
+function initFaqAccordion() {
+  const faqItems = document.querySelectorAll('.faq-item');
+  if (!faqItems.length) return;
+
+  faqItems.forEach(item => {
+    const button = item.querySelector('.faq-question');
+    const panel = item.querySelector('.faq-answer-wrap');
+    if (!button || !panel) return;
+
+    button.setAttribute('aria-expanded', 'false');
+    panel.setAttribute('aria-hidden', 'true');
+
+    button.addEventListener('click', () => {
+      const isOpen = item.classList.contains('open');
+
+      faqItems.forEach(otherItem => {
+        if (otherItem === item) return;
+        otherItem.classList.remove('open');
+        const otherButton = otherItem.querySelector('.faq-question');
+        const otherPanel = otherItem.querySelector('.faq-answer-wrap');
+        if (otherButton) otherButton.setAttribute('aria-expanded', 'false');
+        if (otherPanel) otherPanel.setAttribute('aria-hidden', 'true');
+      });
+
+      item.classList.toggle('open', !isOpen);
+      button.setAttribute('aria-expanded', String(!isOpen));
+      panel.setAttribute('aria-hidden', String(isOpen));
+    });
+  });
 }
 
 /* ══════════════════
