@@ -44,9 +44,6 @@ jobs:
       - name: Update SEO metadata
         run: npm run update-seo-data
 
-      - name: Generate sitemap
-        run: npm run generate-sitemap
-
       - name: Check which files changed
         id: check_changes
         run: |
@@ -130,4 +127,3 @@ jobs:
           echo "  • Git commits (clean history)"
           echo "  • Cloudflare Pages deployments"
           echo "  • Unnecessary CDN cache purges"
-
