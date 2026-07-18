@@ -3568,6 +3568,17 @@ function initAnimations() {
 
   els.forEach(el => obs.observe(el));
 
+  if (!window.matchMedia('(pointer: coarse)').matches) {
+    requestAnimationFrame(() => {
+      document.querySelectorAll('.sr,.sr-l,.sr-r,.sr-s').forEach(el => {
+        const rect = el.getBoundingClientRect();
+        if (rect.bottom > 0 && rect.top < window.innerHeight * 0.95) {
+          el.classList.add('in');
+        }
+      });
+    });
+  }
+
   // Standalone skill bars
   document.querySelectorAll('.about-content').forEach(section => {
     const obs2 = new IntersectionObserver(entries => {
