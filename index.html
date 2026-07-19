@@ -1520,7 +1520,8 @@ function videoCardHTML(v, idx, featured = false) {
 let allVideos = [];
 
 function renderVideos() {
-  const vids = allVideos.slice(0, 9);
+  const featuredId = allVideos[0]?.id;
+  const vids = allVideos.filter(video => video.id !== featuredId).slice(0, 9);
   console.log(`Latest videos: showing ${vids.length}`);
 
   const grid = document.getElementById('videos-grid');
