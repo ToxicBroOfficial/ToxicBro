@@ -1293,18 +1293,28 @@ function initVisualEffects() {
 
     if (reduceMotion || coarsePointer) return;
 
-    card.addEventListener('mousemove', event => {
-      const rect = card.getBoundingClientRect();
-      const x = event.clientX - rect.left;
-      const y = event.clientY - rect.top;
-      const px = x / Math.max(rect.width, 1);
-      const py = y / Math.max(rect.height, 1);
-      const tiltX = (0.5 - py) * 7;
-      const tiltY = (px - 0.5) * 9;
+    let lastCardPointerEvent = null;
+    let cardFrameScheduled = false;
 
-      card.style.setProperty('--mx', `${px * 100}%`);
-      card.style.setProperty('--my', `${py * 100}%`);
-      card.style.transform = `perspective(900px) rotateX(${tiltX}deg) rotateY(${tiltY}deg) translateY(-8px)`;
+    card.addEventListener('mousemove', event => {
+      lastCardPointerEvent = event;
+      if (cardFrameScheduled) return;
+      cardFrameScheduled = true;
+      requestAnimationFrame(() => {
+        cardFrameScheduled = false;
+        if (!lastCardPointerEvent) return;
+        const rect = card.getBoundingClientRect();
+        const x = lastCardPointerEvent.clientX - rect.left;
+        const y = lastCardPointerEvent.clientY - rect.top;
+        const px = x / Math.max(rect.width, 1);
+        const py = y / Math.max(rect.height, 1);
+        const tiltX = (0.5 - py) * 7;
+        const tiltY = (px - 0.5) * 9;
+
+        card.style.setProperty('--mx', `${px * 100}%`);
+        card.style.setProperty('--my', `${py * 100}%`);
+        card.style.transform = `perspective(900px) rotateX(${tiltX}deg) rotateY(${tiltY}deg) translateY(-8px)`;
+      });
     });
 
     card.addEventListener('mouseleave', () => {
@@ -1320,11 +1330,22 @@ function initVisualEffects() {
       if (button.dataset.magneticReady === 'true' || reduceMotion || coarsePointer) return;
       button.dataset.magneticReady = 'true';
       button.classList.add('magnetic-ready');
+
+      let lastButtonPointerEvent = null;
+      let buttonFrameScheduled = false;
+
       button.addEventListener('mousemove', event => {
-        const rect = button.getBoundingClientRect();
-        const x = (event.clientX - rect.left - rect.width / 2) * 0.12;
-        const y = (event.clientY - rect.top - rect.height / 2) * 0.16;
-        button.style.transform = `translate(${x}px, ${y}px) translateY(-3px)`;
+        lastButtonPointerEvent = event;
+        if (buttonFrameScheduled) return;
+        buttonFrameScheduled = true;
+        requestAnimationFrame(() => {
+          buttonFrameScheduled = false;
+          if (!lastButtonPointerEvent) return;
+          const rect = button.getBoundingClientRect();
+          const x = (lastButtonPointerEvent.clientX - rect.left - rect.width / 2) * 0.12;
+          const y = (lastButtonPointerEvent.clientY - rect.top - rect.height / 2) * 0.16;
+          button.style.transform = `translate(${x}px, ${y}px) translateY(-3px)`;
+        });
       });
       button.addEventListener('mouseleave', () => {
         button.style.removeProperty('transform');
