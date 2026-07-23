@@ -300,6 +300,15 @@
 @keyframes heroScrollSweep{0%{transform:translateY(-120%);opacity:0}20%{opacity:1}100%{transform:translateY(120%);opacity:0}}
 @media (prefers-reduced-motion:reduce){.hero-scroll .scroll-line::before{animation:none!important}}
 </style>
+  <style>
+    /* Mobile: show only the main featured video, hide side cards */
+    @media (max-width: 640px) {
+      .featured-layout { grid-template-columns: 1fr !important; gap: 0.75rem; }
+      .featured-layout .feat-side { display: none !important; }
+      .featured-layout .feat-main { grid-column: 1 / -1; }
+      .featured-layout .feat-main .vthumb img { width: 100%; height: auto; display: block; }
+    }
+  </style>
 </head>
 
 <body>
