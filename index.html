@@ -328,6 +328,14 @@
       .about-head-split { display: inline; }
     }
   </style>
+  <style>
+    /* Ensure the about section doesn't create its own scrollbars on desktop */
+    @media (min-width: 900px) {
+      #about, #about * { overflow: visible !important; scrollbar-width: none !important; }
+      /* Hide WebKit scrollbars inside #about */
+      #about *::-webkit-scrollbar { width: 0 !important; height: 0 !important; display: none !important; }
+    }
+  </style>
 </head>
 
 <body>
@@ -349,13 +357,7 @@
 <!-- ══════════════════════════════════════
      LOADER
 ══════════════════════════════════════ -->
-<div id="loader" role="status" aria-label="Loading ToxicBro website">
-  <div class="loader-logo">TOXIC<span>BRO</span></div>
-  <div class="loader-bar-wrap" role="progressbar" aria-valuemin="0" aria-valuemax="100">
-    <div class="loader-bar" id="lbar"></div>
-  </div>
-  <div class="loader-text" aria-live="polite" id="ltxt">Initializing...</div>
-</div>
+<!-- Loader removed to prevent initial flash on page load -->
 
 <!-- ══════════════════════════════════════
      CUSTOM CURSOR
@@ -1029,42 +1031,13 @@ const PROXY_FALLBACKS = [
 
 let currentProxyIndex = 0;
 
-/* ══════════════════════════════════════
-   LOADER
-══════════════════════════════════════ */
-const loader = document.getElementById('loader');
-const ltxt = document.getElementById('ltxt');
-const msgs = ['Initializing...','Loading Videos...','Almost Ready...','Welcome!'];
-let mi = 0;
-const msgTimer = setInterval(() => {
-  mi++;
-  if (mi < msgs.length && ltxt) ltxt.textContent = msgs[mi];
-}, 450);
-
-window.addEventListener('load', () => {
-  clearInterval(msgTimer);
-  if (ltxt) ltxt.textContent = 'Welcome!';
-  setTimeout(() => {
-    if (loader) loader.classList.add('hidden');
-    document.body.style.overflow = '';
-    initAnimations();
-    initVisualEffects();
-    initFaqAccordion();
-
-    requestAnimationFrame(() => {
-      loadVideos();
-    });
-
-    // Verify all sections are loaded
-    const sections = ['home', 'featured', 'videos', 'about', 'community', 'contact'];
-    console.log('\n📋 SITE SECTIONS CHECK:');
-    sections.forEach(id => {
-      const el = document.getElementById(id);
-      console.log(`${el ? '✓' : '✕'} ${id.toUpperCase()} section ${el ? 'loaded' : 'MISSING'}`);
-    });
-    console.log('\n');
-  }, 400);
-});
+/* Loader removed — init sequence runs immediately */
+initAnimations();
+initVisualEffects();
+initFaqAccordion();
+requestAnimationFrame(() => { loadVideos(); });
+// Verify all sections are loaded
+{ const sections = ['home','featured','videos','about','community','contact']; console.log('\n📋 SITE SECTIONS CHECK:'); sections.forEach(id => { const el = document.getElementById(id); console.log(`${el ? '✓' : '✕'} ${id.toUpperCase()} section ${el ? 'loaded' : 'MISSING'}`); }); console.log('\n'); }
 
 /* ══════════════════════════════════════
    PARTICLE CANVAS
