@@ -316,11 +316,16 @@
     }
   </style>
   <style>
+    /* Desktop: show heading on two lines by making wrapper block */
+    @media (min-width: 641px) {
+      .about-head-split { display: block; }
+    }
     /* Mobile: center about-frame and about-heading on small screens */
     @media (max-width: 640px) {
       .about-grid { display: flex; flex-direction: column; align-items: center; gap: 1rem; }
       .about-frame { margin: 0 auto; display: block; }
-      .about-heading { text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: clamp(1.25rem, 4vw, 1.6rem); line-height: 1; }
+      .about-heading { text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: clamp(1.6rem, 5.5vw, 2.2rem); line-height: 1.05; font-weight:700; }
+      .about-head-split { display: inline; }
     }
   </style>
 </head>
@@ -617,7 +622,7 @@
 
       <!-- About copy -->
       <div class="about-content sr-r">
-        <h2 class="about-heading">WHO IS <span class="red">TOXIC</span><span class="outline">BRO?</span></h2>
+        <h2 class="about-heading">WHO IS <span class="about-head-split"><span class="red">TOXIC</span><span class="outline">BRO?</span></span></h2>
         <p class="about-desc" itemprop="description">
           <strong>ToxicBro</strong> is the online gaming identity of <strong>Abdul Gaffar Patowary</strong>, a gaming content creator from <strong>Bangladesh</strong>. The channel features exciting gameplay, challenges, funny moments, epic wins, gaming tips, YouTube Shorts, and entertaining videos from a variety of games.
         </p>
