@@ -1,4 +1,4 @@
-// YouTube API Function with Cloudflare CDN Caching
+﻿// YouTube API Function with Cloudflare CDN Caching
 // 100% Reliable with proper error handling and fallback support
 
 const CHANNEL_ID = 'UCXG8sste5hX3P26gWayrlkg';
@@ -15,8 +15,8 @@ const jsonHeaders = {
 
 // Basic in-memory rate limiting (best-effort; ephemeral in serverless env)
 const ALLOWED_ORIGINS = [
-  'https://toxicbro.pages.dev',
-  'https://www.toxicbro.pages.dev',
+  'https://toxicbro.me',
+  'https://www.toxicbro.me',
   'http://localhost:5173',
 ];
 const RATE_LIMIT_WINDOW = 60 * 1000; // 1 minute
@@ -156,11 +156,11 @@ async function fetchYouTubeData(apiKey) {
 
   // Step 1: Fetch channel statistics
   const stats = await fetchChannelStats(apiKey);
-  console.log('✓ Channel stats fetched:', stats);
+  console.log('âœ“ Channel stats fetched:', stats);
 
   // Step 2: Fetch recent videos
   const videos = await fetchRecentVideos(apiKey, MAX_RESULTS);
-  console.log(`✓ Fetched ${videos.length} videos`);
+  console.log(`âœ“ Fetched ${videos.length} videos`);
 
   return {
     stats,
