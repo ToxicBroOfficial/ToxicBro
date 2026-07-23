@@ -26,7 +26,6 @@ const SITE_BASE_URL = 'https://toxicbro.me';
 // Paths to output files
 const VIDEOS_FILE = path.join(__dirname, '../../videos.json');
 const CHANNEL_FILE = path.join(__dirname, '../../channel.json');
-const SITEMAP_FILE = path.join(__dirname, '../../sitemap.xml');
 const STATE_FILE = path.join(__dirname, '../../.github/scripts/state.json');
 
 // API keys from GitHub Secrets
@@ -66,68 +65,6 @@ function saveState(state) {
     fs.writeFileSync(STATE_FILE, JSON.stringify(state, null, 2));
   } catch (err) {
     console.error(`âŒ Could not save state: ${err.message}`);
-  }
-}
-
-function generateSitemap() {
-  try {
-    const videosData = loadJsonFile(path.join(__dirname, '../../videos.json')) || { videos: [] };
-    const channelData = loadJsonFile(path.join(__dirname, '../../channel.json')) || { stats: {}, updatedAt: new Date().toISOString() };
-    const lastmod = formatDate(channelData.updatedAt || videosData.updatedAt);
-
-    const urls = [
-      {
-        loc: `${SITE_BASE_URL}/`,
-        lastmod,
-        changefreq: 'weekly',
-        priority: '1.0',
-      },
-      {
-        loc: `${SITE_BASE_URL}/about.html`,
-        lastmod,
-        changefreq: 'monthly',
-        priority: '0.8',
-      },
-      {
-        loc: `${SITE_BASE_URL}/achievements.html`,
-        lastmod,
-        changefreq: 'monthly',
-        priority: '0.8',
-      },
-      {
-        loc: `${SITE_BASE_URL}/biography.html`,
-        lastmod,
-        changefreq: 'monthly',
-        priority: '0.8',
-      },
-      {
-        loc: `${SITE_BASE_URL}/contact.html`,
-        lastmod,
-        changefreq: 'monthly',
-        priority: '0.7',
-      },
-      {
-        loc: `${SITE_BASE_URL}/privacy-policy.html`,
-        lastmod,
-        changefreq: 'yearly',
-        priority: '0.5',
-      },
-      {
-        loc: `${SITE_BASE_URL}/disclaimer.html`,
-        lastmod,
-        changefreq: 'monthly',
-        priority: '0.5',
-      },
-    ];
-
-    const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls
-      .map((url) => `  <url>\n    <loc>${url.loc}</loc>\n    <lastmod>${url.lastmod}</lastmod>\n    <changefreq>${url.changefreq}</changefreq>\n    <priority>${url.priority}</priority>\n  </url>`)
-      .join('\n')}\n</urlset>\n`;
-
-    fs.writeFileSync(SITEMAP_FILE, xml, 'utf8');
-    console.log(`âœ… Generated sitemap: ${path.basename(SITEMAP_FILE)} (${urls.length} URLs)`);
-  } catch (err) {
-    console.error(`âŒ Could not generate sitemap: ${err.message}`);
   }
 }
 
@@ -470,12 +407,6 @@ async function main() {
       if (!filesToCommit.includes(CHANNEL_FILE)) {
         filesToCommit.push(CHANNEL_FILE);
       }
-    }
-
-    // ===== STEP 5: GENERATE SITEMAP (ALWAYS, AFTER UPDATE) =====
-    generateSitemap();
-    if (!filesToCommit.includes(SITEMAP_FILE)) {
-      filesToCommit.push(SITEMAP_FILE);
     }
 
     // ===== FINAL SUMMARY =====
