@@ -315,6 +315,14 @@
       #videos-grid .video-card-item:first-child { display: none !important; }
     }
   </style>
+  <style>
+    /* Mobile: center about-frame and about-heading on small screens */
+    @media (max-width: 640px) {
+      .about-grid { display: flex; flex-direction: column; align-items: center; gap: 1rem; }
+      .about-frame { margin: 0 auto; display: block; }
+      .about-heading { text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: clamp(1.25rem, 4vw, 1.6rem); line-height: 1; }
+    }
+  </style>
 </head>
 
 <body>
