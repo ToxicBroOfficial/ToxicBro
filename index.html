@@ -309,6 +309,12 @@
       .featured-layout .feat-main .vthumb img { width: 100%; height: auto; display: block; }
     }
   </style>
+  <style>
+    /* Mobile: hide the first/latest video in the Latest Videos grid */
+    @media (max-width: 640px) {
+      #videos-grid .video-card-item:first-child { display: none !important; }
+    }
+  </style>
 </head>
 
 <body>
