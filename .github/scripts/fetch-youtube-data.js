@@ -83,37 +83,37 @@ function generateSitemap() {
         priority: '1.0',
       },
       {
-        loc: `${SITE_BASE_URL}/pages/about.html`,
+        loc: `${SITE_BASE_URL}/about.html`,
         lastmod,
         changefreq: 'monthly',
         priority: '0.8',
       },
       {
-        loc: `${SITE_BASE_URL}/pages/achievements.html`,
+        loc: `${SITE_BASE_URL}/achievements.html`,
         lastmod,
         changefreq: 'monthly',
         priority: '0.8',
       },
       {
-        loc: `${SITE_BASE_URL}/pages/biography.html`,
+        loc: `${SITE_BASE_URL}/biography.html`,
         lastmod,
         changefreq: 'monthly',
         priority: '0.8',
       },
       {
-        loc: `${SITE_BASE_URL}/pages/contact.html`,
+        loc: `${SITE_BASE_URL}/contact.html`,
         lastmod,
         changefreq: 'monthly',
         priority: '0.7',
       },
       {
-        loc: `${SITE_BASE_URL}/pages/privacy-policy.html`,
+        loc: `${SITE_BASE_URL}/privacy-policy.html`,
         lastmod,
         changefreq: 'yearly',
         priority: '0.5',
       },
       {
-        loc: `${SITE_BASE_URL}/pages/disclaimer.html`,
+        loc: `${SITE_BASE_URL}/disclaimer.html`,
         lastmod,
         changefreq: 'monthly',
         priority: '0.5',
@@ -531,4 +531,7 @@ function loadChannelJson() {
 }
 
 main();
+
+
+
 
