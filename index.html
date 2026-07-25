@@ -320,6 +320,12 @@
       .about-head-split { display: inline; }
     }
   </style>
+  <style>
+    /* Lock body scroll when mobile menu is open */
+    body.menu-open { overflow: hidden; }
+  </style>
+    }
+  </style>
   
 </head>
 
@@ -1134,14 +1140,14 @@ if (ham && mob) {
     const open = mob.classList.toggle('open');
     ham.classList.toggle('open', open);
     ham.setAttribute('aria-expanded', String(open));
-    document.body.style.overflow = open ? 'hidden' : '';
+    document.body.classList.toggle('menu-open', open);
   });
   mob.querySelectorAll('a').forEach(a => {
     a.addEventListener('click', () => {
       mob.classList.remove('open');
       ham.classList.remove('open');
       ham.setAttribute('aria-expanded', 'false');
-      document.body.style.overflow = '';
+      document.body.classList.remove('menu-open');
     });
   });
 }
