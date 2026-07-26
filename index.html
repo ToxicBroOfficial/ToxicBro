@@ -535,8 +535,9 @@
       .hamburger { display:flex; }
       #nav { padding: 0.6rem 1rem; }
       .nav-logo { font-size: 1.05rem; }
-      .mobile-overlay { padding: 1.25rem; gap: 0.75rem; align-items:flex-start; }
-      .mobile-overlay a { padding: 14px 0; width:100%; display:block; font-size:1.05rem; border-bottom:1px solid rgba(255,255,255,0.03); }
+      .mobile-overlay { padding: 1rem; }
+      .mobile-panel { width: min(92vw, 340px); }
+      .mobile-overlay .mob-link { padding: 0.85rem 0.8rem; font-size: 1rem; }
     }
 
     /* Ensure main content is offset to account for the fixed header */
@@ -1513,11 +1514,10 @@ function initHamburger() {
     setMenuState(!isOpen);
   });
 
-  document.addEventListener('click', (event) => {
-    if (!mob.classList.contains('open')) return;
-    if (event.target === ham || ham.contains(event.target)) return;
-    if (event.target === mob || mob.contains(event.target)) return;
-    setMenuState(false);
+  mob.addEventListener('click', (event) => {
+    if (event.target === mob) {
+      setMenuState(false);
+    }
   });
 
   document.addEventListener('keydown', (event) => {
