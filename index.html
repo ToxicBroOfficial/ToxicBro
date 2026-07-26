@@ -347,14 +347,20 @@
     body.menu-open { overflow: hidden; }
   </style>
   <style>
-    /* Ensure mobile overlay is fully hidden until explicitly opened */
+    /* Clean, lightweight mobile menu */
     .mobile-overlay {
+      position: fixed;
+      inset: 0;
       display: none !important;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      background: rgba(2, 2, 4, 0.82);
+      backdrop-filter: blur(6px);
       opacity: 0 !important;
       visibility: hidden !important;
       pointer-events: none !important;
-      transition: none !important;
-      /* Ensure overlay appears above the fixed header on small viewports */
+      transition: opacity 0.2s ease, visibility 0.2s ease;
       z-index: 1101;
     }
     .mobile-overlay.open {
@@ -362,9 +368,52 @@
       opacity: 1 !important;
       visibility: visible !important;
       pointer-events: auto !important;
+    }
+    .mobile-panel {
+      width: min(92vw, 320px);
+      background: rgba(10, 10, 14, 0.96);
+      border: 1px solid rgba(232, 0, 28, 0.2);
+      border-radius: 20px;
+      padding: 0.9rem 0.9rem 1rem;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
+      display: flex;
       flex-direction: column;
-      align-items: flex-start;
-      justify-content: flex-start;
+      gap: 0.6rem;
+      transform: translateY(6px);
+      transition: transform 0.2s ease;
+    }
+    .mobile-overlay.open .mobile-panel {
+      transform: translateY(0);
+    }
+    .mobile-close {
+      align-self: flex-end;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      color: #fff;
+      background: rgba(255, 255, 255, 0.08);
+      margin-bottom: 0.2rem;
+    }
+    .mobile-overlay .mob-link {
+      width: 100%;
+      padding: 0.8rem 0.75rem;
+      border-radius: 12px;
+      color: #fff;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      font-size: 0.98rem;
+      transition: background 0.18s ease, transform 0.18s ease;
+    }
+    .mobile-overlay .mob-link:hover {
+      background: rgba(232, 0, 28, 0.14);
+      transform: translateX(2px);
+    }
+    @media (max-width: 900px) {
+      .mobile-overlay {
+        padding: 1rem;
+      }
     }
   </style>
 
@@ -553,11 +602,14 @@
 
 <!-- Mobile Menu -->
 <div class="mobile-overlay" id="mob-menu" role="dialog" aria-label="Mobile navigation menu" aria-modal="true">
-  <a href="about.html" class="mob-link">About Creator</a>
-  <a href="biography.html" class="mob-link">Creator Story</a>
-  <a href="achievements.html" class="mob-link">Achievements</a>
-  <a href="disclaimer.html" class="mob-link">Disclaimer</a>
-  <a href="privacy-policy.html" class="mob-link">Privacy Policy</a>
+  <div class="mobile-panel">
+    <button class="mobile-close" id="mob-close" type="button" aria-label="Close mobile menu">✕</button>
+    <a href="about.html" class="mob-link">About Creator</a>
+    <a href="biography.html" class="mob-link">Creator Story</a>
+    <a href="achievements.html" class="mob-link">Achievements</a>
+    <a href="disclaimer.html" class="mob-link">Disclaimer</a>
+    <a href="privacy-policy.html" class="mob-link">Privacy Policy</a>
+  </div>
 </div>
 
 <main id="main-content">
@@ -1443,6 +1495,14 @@ function initHamburger() {
       mob.style.pointerEvents = 'none';
     }
   };
+
+  const closeButton = document.getElementById('mob-close');
+  if (closeButton) {
+    closeButton.addEventListener('click', (event) => {
+      event.preventDefault();
+      setMenuState(false);
+    });
+  }
 
   ham.addEventListener('click', (event) => {
     event.preventDefault();
