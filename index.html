@@ -1,44 +1,8 @@
 ﻿<!DOCTYPE html>
-<html lang="en" prefix="og: https://ogp.me/ns#" class="is-loading">
+<html lang="en" prefix="og: https://ogp.me/ns#">
 <head>
-  <script>document.documentElement.classList.add('is-loading');</script>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover"/>
-  <style>
-    /* Hide scrolling during initial load to avoid scrollbar flash */
-    html.is-loading, html.is-loading body {
-      overflow: hidden !important;
-      height: 100vh !important;
-      max-height: 100vh !important;
-    }
-
-    /* Hide transient visual layers until the page is fully ready */
-    html.is-loading #particle-canvas,
-    html.is-loading .cursor,
-    html.is-loading .cursor-ring,
-    html.is-loading #back-to-top {
-      display: none !important;
-      visibility: hidden !important;
-    }
-
-    /* Avoid forcing scrollbar gutters during initial load */
-      /* Ensure a dark background immediately to avoid a white gutter during parse */
-      html, html.is-loading, html.is-loading body { background: #050505 !important; -webkit-text-size-adjust: 100%; -moz-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
-  </style>
-  <style>
-    /* Safety overrides: remove decorative hero layers and section watermark text */
-    .hero-bg-grad, .hero-grid-lines, .hero-scanline, .hero-corner, .avatar-ring, .avatar-ring2, .section-accent {
-      display: none !important;
-      background: none !important;
-      box-shadow: none !important;
-      opacity: 0 !important;
-      visibility: hidden !important;
-      pointer-events: none !important;
-    }
-
-    /* Force a single main scrollbar for the page (allow normal scrolling) */
-    html, body { overflow-x: hidden !important; overflow-y: auto !important; scrollbar-gutter: auto !important; }
-  </style>
   <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
   <meta http-equiv="Content-Security-Policy" content="default-src 'self' https:; connect-src 'self' https://www.youtube.com https://i.ytimg.com https://api.allorigins.win https://static.cloudflareinsights.com https://*.cloudflareinsights.com https://cloudflareinsights.com https://*.cloudflare.com; img-src 'self' data: https://yt3.ggpht.com https://i.ytimg.com; script-src 'self' 'unsafe-inline' https://www.youtube.com https://static.cloudflareinsights.com https://*.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; frame-src https://www.youtube.com https://youtube.com;">
   <!-- Deploy marker: 2026-07-27-1 -->
@@ -333,8 +297,28 @@
 </style>
   <style>
     /* Mobile: show only the main featured video, hide side cards */
-    @media (max-width: 640px) {
+      html, html.is-loading, html.is-loading body { background: #050505 !important; -webkit-text-size-adjust: 100%; -moz-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
       .featured-layout { grid-template-columns: 1fr !important; gap: 0.75rem; }
+  <style>
+    /* Remove decorative hero/grid layers that create thin stripe artifacts */
+    .hero-bg-grad,
+    .hero-grid-lines,
+    .hero-scanline,
+    .hero-corner,
+    .avatar-ring,
+    .avatar-ring2,
+    .hero .deco-line {
+      display: none !important;
+      background: none !important;
+      box-shadow: none !important;
+      opacity: 0 !important;
+      visibility: hidden !important;
+      pointer-events: none !important;
+    }
+
+    /* Ensure page uses single main scrollbar and no overflow flashes */
+    html, body { overflow-x: hidden !important; overflow-y: auto !important; }
+  </style>
       .featured-layout .feat-side { display: none !important; }
       .featured-layout .feat-main { grid-column: 1 / -1; }
       .featured-layout .feat-main .vthumb img { width: 100%; height: auto; display: block; }
@@ -640,14 +624,6 @@
      HERO SECTION
 ══════════════════════════════════════ -->
 <section class="hero" aria-label="ToxicBro — Official Hero Section" id="home">
-  <div class="hero-bg-grad" aria-hidden="true"></div>
-  <div class="hero-grid-lines" aria-hidden="true"></div>
-  <div class="hero-scanline" aria-hidden="true"></div>
-  <div class="hero-corner tl" aria-hidden="true"></div>
-  <div class="hero-corner tr" aria-hidden="true"></div>
-  <div class="hero-corner bl" aria-hidden="true"></div>
-  <div class="hero-corner br" aria-hidden="true"></div>
-
   <div class="hero-content">
     <!-- Avatar -->
     <div class="hero-avatar-wrap" aria-hidden="true">
