@@ -319,6 +319,13 @@
     /* Ensure page uses single main scrollbar and no overflow flashes */
     html, body { overflow-x: hidden !important; overflow-y: auto !important; }
   </style>
+  <style>
+    /* Critical scrollbar styles — inline to ensure they apply before first paint */
+    *::-webkit-scrollbar { width: 12px; height: 12px; }
+    *::-webkit-scrollbar-track { background: #050505; }
+    *::-webkit-scrollbar-thumb { background: rgba(232,0,28,0.45); border-radius: 8px; border: 3px solid rgba(0,0,0,0.12); }
+    html { scrollbar-width: thin; scrollbar-color: rgba(232,0,28,0.45) #050505; }
+  </style>
       .featured-layout .feat-side { display: none !important; }
       .featured-layout .feat-main { grid-column: 1 / -1; }
       .featured-layout .feat-main .vthumb img { width: 100%; height: auto; display: block; }
