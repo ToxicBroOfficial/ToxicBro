@@ -25,6 +25,20 @@
       /* Ensure a dark background immediately to avoid a white gutter during parse */
       html, html.is-loading, html.is-loading body { background: #050505 !important; -webkit-text-size-adjust: 100%; -moz-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
   </style>
+  <style>
+    /* Safety overrides: remove decorative hero layers that can create visual stripes */
+    .hero-bg-grad, .hero-grid-lines, .hero-scanline, .hero-corner, .avatar-ring, .avatar-ring2 {
+      display: none !important;
+      background: none !important;
+      box-shadow: none !important;
+      opacity: 0 !important;
+      visibility: hidden !important;
+      pointer-events: none !important;
+    }
+
+    /* Force a single main scrollbar for the page (allow normal scrolling) */
+    html, body { overflow-x: hidden !important; overflow-y: auto !important; scrollbar-gutter: auto !important; }
+  </style>
   <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
   <meta http-equiv="Content-Security-Policy" content="default-src 'self' https:; connect-src 'self' https://www.youtube.com https://i.ytimg.com https://api.allorigins.win https://static.cloudflareinsights.com https://*.cloudflareinsights.com https://cloudflareinsights.com https://*.cloudflare.com; img-src 'self' data: https://yt3.ggpht.com https://i.ytimg.com; script-src 'self' 'unsafe-inline' https://www.youtube.com https://static.cloudflareinsights.com https://*.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; frame-src https://www.youtube.com https://youtube.com;">
   <!-- Deploy marker: 2026-07-27-1 -->
