@@ -1,6 +1,7 @@
 ﻿<!DOCTYPE html>
 <html lang="en" prefix="og: https://ogp.me/ns#" class="is-loading">
 <head>
+  <script>document.documentElement.classList.add('is-loading');</script>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover"/>
   <style>
@@ -339,8 +340,14 @@
     @media (max-width: 640px) {
       .about-grid { display: flex; flex-direction: column; align-items: center; gap: 1rem; }
       .about-frame { margin: 0 auto; display: block; }
-      .about-heading { text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: clamp(1.6rem, 5.5vw, 2.2rem); line-height: 1.05; font-weight:700; }
+      /* Allow headings to wrap on small screens to avoid layout overflow */
+      .about-heading { text-align: center; white-space: normal; overflow: visible; font-size: clamp(1.6rem, 5.5vw, 2.2rem); line-height: 1.05; font-weight:700; }
       .about-head-split { display: inline; }
+      /* Constrain content and skill bars to viewport width */
+      .about-content, .skills-wrap, .skill-item, .skill-label, .skill-bar-bg, .btn-primary { max-width: 100%; box-sizing: border-box; }
+      .about-content, .about-desc { word-break: break-word; }
+      /* Hide oversized decorative watermark on small screens */
+      .army-watermark { display: none !important; }
     }
   </style>
   <style>
