@@ -1375,11 +1375,28 @@ function initHamburger() {
     ham.classList.toggle('open', open);
     ham.setAttribute('aria-expanded', String(open));
     document.body.classList.toggle('menu-open', open);
+    // Explicitly set inline styles as a robust fallback when CSS rules
+    // may not apply reliably after a desktop resize.
+    if (open) {
+      mob.style.display = 'flex';
+      mob.style.opacity = '1';
+      mob.style.visibility = 'visible';
+      mob.style.pointerEvents = 'auto';
+    } else {
+      mob.style.display = 'none';
+      mob.style.opacity = '0';
+      mob.style.visibility = 'hidden';
+      mob.style.pointerEvents = 'none';
+    }
     if (e && typeof e.preventDefault === 'function') e.preventDefault();
   }
 
   ham.addEventListener('click', toggleMenu);
   ham.addEventListener('pointerdown', toggleMenu);
+  ham.addEventListener('touchstart', toggleMenu);
+  ham.addEventListener('keydown', (ev) => {
+    if (ev.key === 'Enter' || ev.key === ' ') toggleMenu(ev);
+  });
 
   mob.querySelectorAll('a').forEach(a => {
     a.addEventListener('click', () => {
