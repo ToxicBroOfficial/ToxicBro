@@ -1473,6 +1473,8 @@ window.addEventListener('scroll', () => {
    HAMBURGER — initialize after load to avoid startup flashes
 ══════════════════════════════════════ */
 function initHamburger() {
+  if (window.__hamburgerInitialized) return;
+
   const ham = document.getElementById('ham');
   const mob = document.getElementById('mob-menu');
   if (!ham || !mob) return;
@@ -1529,14 +1531,13 @@ function initHamburger() {
   });
 
   setMenuState(false);
+  window.__hamburgerInitialized = true;
 }
 
 if (document.readyState === 'complete') {
   initHamburger();
 } else {
   window.addEventListener('load', initHamburger, { once: true });
-  // Fallback initializer in case load doesn't fire quickly
-  setTimeout(initHamburger, 3500);
 }
 
 /* ══════════════════════════════════════
