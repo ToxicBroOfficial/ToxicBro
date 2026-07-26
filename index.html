@@ -326,6 +326,24 @@
     *::-webkit-scrollbar-thumb { background: rgba(232,0,28,0.45); border-radius: 8px; border: 3px solid rgba(0,0,0,0.12); }
     html { scrollbar-width: thin; scrollbar-color: rgba(232,0,28,0.45) #050505; }
   </style>
+  <style>
+    /* Hide any potential loader/progress bars that render a full-width red line */
+    #loader, #loader *,
+    .loader-bar-wrap, .loader-bar,
+    .header-bar-wrap, .header-bar,
+    .top-stripe, .site-stripe {
+      display: none !important;
+      background: none !important;
+      box-shadow: none !important;
+      height: 0 !important;
+      opacity: 0 !important;
+      visibility: hidden !important;
+      pointer-events: none !important;
+    }
+
+    /* Defensive: remove nav pseudo-element backgrounds */
+    #nav::before, #nav::after { display: none !important; background: none !important; }
+  </style>
       .featured-layout .feat-side { display: none !important; }
       .featured-layout .feat-main { grid-column: 1 / -1; }
       .featured-layout .feat-main .vthumb img { width: 100%; height: auto; display: block; }
