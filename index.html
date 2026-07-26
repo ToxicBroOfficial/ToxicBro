@@ -346,8 +346,7 @@
       /* Constrain content and skill bars to viewport width */
       .about-content, .skills-wrap, .skill-item, .skill-label, .skill-bar-bg, .btn-primary { max-width: 100%; box-sizing: border-box; }
       .about-content, .about-desc { word-break: break-word; }
-      /* Hide oversized decorative watermark on small screens */
-      .army-watermark { display: none !important; }
+      /* (removed decorative watermark to prevent layout conflicts) */
     }
   </style>
   <style>
@@ -1037,7 +1036,7 @@
     </div>
 
     <div class="army-box sr" data-delay="5">
-      <div class="army-watermark" aria-hidden="true">TOXIC ARMY</div>
+      <!-- decorative watermark removed to avoid homepage overflow/conflict -->
       <h3 class="army-title">JOIN THE ARMY</h3>
       <p class="army-sub">Subscribe to ToxicBro — new videos every week. Don't miss the action.</p>
       <a href="https://www.youtube.com/@ToxicBroYT?sub_confirmation=1"
