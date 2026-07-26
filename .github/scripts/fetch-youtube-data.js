@@ -399,6 +399,8 @@ async function main() {
         stats,
         updatedAt: new Date().toISOString(),
         cached: false,
+        syncedAt: new Date().toISOString(),
+        source: newVideoDetected ? 'youtube-upload' : 'youtube-sync',
       };
 
       fs.writeFileSync(CHANNEL_FILE, JSON.stringify(channelData, null, 2));

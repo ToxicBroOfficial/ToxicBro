@@ -1185,6 +1185,7 @@ const CHANNEL_ID = 'UCXG8sste5hX3P26gWayrlkg';
 const CHANNEL_USERNAME = '@ToxicBroYT';
 const CHANNEL_URL = 'https://www.youtube.com/@ToxicBroYT/';
 const PROXY = 'https://api.allorigins.win/get?url=';
+const DEFAULT_FALLBACK_STATS = { subscribers: 17300, views: 1444684, videos: 64 };
 
 // Fallback proxies in case primary fails (DEPRECATED - Using YouTube API v3 now)
 const PROXY_FALLBACKS = [
@@ -1198,11 +1199,70 @@ const CHANNEL_JSON_URL = '/channel.json';
 let allVideos = [];
 const coarsePointer = window.matchMedia('(pointer: coarse)').matches;
 
+function buildJsonUrl(baseUrl) {
+  return baseUrl;
+}
+
+function getFallbackStats() {
+  try {
+    const cached = getStatsCache();
+    return {
+      subscribers: cached?.subscribers ?? DEFAULT_FALLBACK_STATS.subscribers,
+      views: cached?.views ?? DEFAULT_FALLBACK_STATS.views,
+      videos: cached?.videos ?? DEFAULT_FALLBACK_STATS.videos,
+    };
+  } catch (err) {
+    return DEFAULT_FALLBACK_STATS;
+  }
+}
+
+function setStatsDisplay(statsData, source = 'live') {
+  const resolved = {
+    subscribers: Number.isFinite(statsData?.subscribers) ? statsData.subscribers : getFallbackStats().subscribers,
+    views: Number.isFinite(statsData?.views) ? statsData.views : getFallbackStats().views,
+    videos: Number.isFinite(statsData?.videos) ? statsData.videos : getFallbackStats().videos,
+  };
+
+  const subEl = document.getElementById('stat-subs');
+  if (subEl) {
+    animateCount(subEl, resolved.subscribers);
+  }
+
+  const viewEl = document.getElementById('stat-views');
+  if (viewEl) {
+    animateCount(viewEl, resolved.views);
+  }
+
+  const vidEl = document.getElementById('stat-vids');
+  if (vidEl) {
+    animateCount(vidEl, resolved.videos);
+  }
+
+  updateSubscriberGoal(resolved.subscribers);
+
+  const statusEl = document.getElementById('stats-status');
+  if (statusEl) {
+    if (source === 'fallback') {
+      statusEl.textContent = 'Showing the latest verified values while live sync completes.';
+      statusEl.style.color = 'var(--text)';
+    } else if (source === 'loading') {
+      statusEl.textContent = 'Refreshing latest channel updates...';
+      statusEl.style.color = 'var(--muted)';
+    } else {
+      statusEl.textContent = 'Live channel stats are currently updating.';
+      statusEl.style.color = 'var(--text)';
+    }
+  }
+}
+
 /* Loader removed — init sequence runs immediately */
 initAnimations();
 initVisualEffects();
 initFaqAccordion();
-requestAnimationFrame(() => { loadVideos(); });
+requestAnimationFrame(() => {
+  setStatsDisplay(getFallbackStats(), 'loading');
+  loadVideos();
+});
 // Verify all sections are loaded
 { const sections = ['home','featured','videos','about','community','contact']; console.log('\n📋 SITE SECTIONS CHECK:'); sections.forEach(id => { const el = document.getElementById(id); console.log(`${el ? '✓' : '✕'} ${id.toUpperCase()} section ${el ? 'loaded' : 'MISSING'}`); }); console.log('\n'); }
 
@@ -1683,8 +1743,10 @@ function renderVideos() {
 
   const grid = document.getElementById('videos-grid');
   if (!vids.length) {
-    grid.innerHTML = `<div class="spin-wrap">
-      <p style="font-family:var(--font-ui);color:var(--muted);text-align:center;grid-column:1/-1;">Videos are still loading. You can also <a href="https://www.youtube.com/@ToxicBroYT/shorts" target="_blank" rel="noopener noreferrer" aria-label="Visit ToxicBro YouTube Shorts directly" style="color:var(--r);text-decoration:underline;">watch on YouTube</a>.</p>
+    grid.innerHTML = `<div class="spin-wrap" style="display:flex;flex-direction:column;align-items:center;gap:0.6rem;padding:1.2rem 1rem;border:1px solid rgba(255,255,255,0.08);border-radius:16px;background:rgba(255,255,255,0.03);grid-column:1/-1;">
+      <p style="font-family:var(--font-ui);color:var(--text);text-align:center;font-size:1rem;margin:0;">Latest uploads are refreshing now.</p>
+      <p style="font-family:var(--font-ui);color:var(--muted);text-align:center;margin:0;line-height:1.5;">New videos will appear here as soon as the latest feed is available.</p>
+      <a href="https://www.youtube.com/@ToxicBroYT/shorts" target="_blank" rel="noopener noreferrer" aria-label="Visit ToxicBro YouTube Shorts directly" style="color:var(--r);text-decoration:none;font-weight:600;">Watch on YouTube</a>
     </div>`;
     grid.setAttribute('aria-busy', 'true');
     return;
@@ -1826,6 +1888,7 @@ function updateSubscriberGoal(subscriberCount) {
 async function loadVideos() {
   console.log('\n📺 STARTING YOUTUBE DATA LOAD...');
   console.log('📥 Loading from static JSON files (auto-updated by GitHub Actions)...');
+  setStatsDisplay(getFallbackStats(), 'loading');
 
   try {
     // Fetch both files in parallel for efficiency
@@ -1851,48 +1914,43 @@ async function loadVideos() {
     // Update channel statistics
     console.log('📊 Updating channel statistics...');
     const stats = channelData.stats;
+    const resolvedStats = {
+      subscribers: null,
+      videos: null,
+      views: null,
+    };
 
     if (stats.subscriberCount && stats.subscriberCount !== '0') {
-      const subEl = document.getElementById('stat-subs');
-      if (subEl) {
-        const subs = parseInt(stats.subscriberCount, 10);
-        if (!isNaN(subs) && subs > 0) {
-          subEl.textContent = fmtNum(subs);
-          updateSubscriberGoal(subs);
-          console.log('✓ Subscribers:', fmtNum(subs));
-          saveStatsCache({ subscribers: subs });
-        }
+      const subs = parseInt(stats.subscriberCount, 10);
+      if (!isNaN(subs) && subs > 0) {
+        resolvedStats.subscribers = subs;
+        console.log('✓ Subscribers:', fmtNum(subs));
+        saveStatsCache({ subscribers: subs });
       }
-    } else {
-      useStatsFallback('subscribers');
     }
 
     if (stats.videoCount && stats.videoCount !== '0') {
-      const vidEl = document.getElementById('stat-vids');
-      if (vidEl) {
-        const vids = parseInt(stats.videoCount, 10);
-        if (!isNaN(vids) && vids >= 0) {
-          vidEl.textContent = vids;
-          console.log('✓ Videos:', vids);
-          saveStatsCache({ videos: vids });
-        }
+      const vids = parseInt(stats.videoCount, 10);
+      if (!isNaN(vids) && vids >= 0) {
+        resolvedStats.videos = vids;
+        console.log('✓ Videos:', vids);
+        saveStatsCache({ videos: vids });
       }
-    } else {
-      useStatsFallback('videos');
     }
 
     if (stats.viewCount && stats.viewCount !== '0') {
-      const viewEl = document.getElementById('stat-views');
-      if (viewEl) {
-        const views = parseInt(stats.viewCount, 10);
-        if (!isNaN(views) && views >= 0) {
-          viewEl.textContent = fmtNum(views);
-          console.log('✓ Total Views:', fmtNum(views));
-          saveStatsCache({ views });
-        }
+      const views = parseInt(stats.viewCount, 10);
+      if (!isNaN(views) && views >= 0) {
+        resolvedStats.views = views;
+        console.log('✓ Total Views:', fmtNum(views));
+        saveStatsCache({ views });
       }
+    }
+
+    if (resolvedStats.subscribers !== null || resolvedStats.videos !== null || resolvedStats.views !== null) {
+      setStatsDisplay(resolvedStats, 'live');
     } else {
-      useStatsFallback('views');
+      useStatsFallback('all');
     }
 
     // Update videos list
@@ -2011,41 +2069,35 @@ function saveStatsCache(statsData) {
 
 function useStatsFallback(type) {
   const cached = getStatsCache();
+  const fallbackStats = {
+    subscribers: cached?.subscribers ?? DEFAULT_FALLBACK_STATS.subscribers,
+    videos: cached?.videos ?? DEFAULT_FALLBACK_STATS.videos,
+    views: cached?.views ?? DEFAULT_FALLBACK_STATS.views,
+  };
+
   if (!cached) {
     console.warn('⚠️ No stats cache available for fallback');
-    return;
   }
 
   if (type === 'all' || type === 'subscribers') {
-    if (cached.subscribers) {
-      const subEl = document.getElementById('stat-subs');
-      if (subEl) {
-        subEl.textContent = fmtNum(cached.subscribers);
-        updateSubscriberGoal(cached.subscribers);
-        console.log('✓ Using cached subscribers:', fmtNum(cached.subscribers));
-      }
+    if (cached?.subscribers) {
+      console.log('✓ Using cached subscribers:', fmtNum(cached.subscribers));
     }
   }
 
   if (type === 'all' || type === 'videos') {
-    if (cached.videos) {
-      const vidEl = document.getElementById('stat-vids');
-      if (vidEl) {
-        vidEl.textContent = cached.videos;
-        console.log('✓ Using cached videos:', cached.videos);
-      }
+    if (cached?.videos) {
+      console.log('✓ Using cached videos:', cached.videos);
     }
   }
 
   if (type === 'all' || type === 'views') {
-    if (cached.views) {
-      const viewEl = document.getElementById('stat-views');
-      if (viewEl) {
-        viewEl.textContent = fmtNum(cached.views);
-        console.log('✓ Using cached views:', fmtNum(cached.views));
-      }
+    if (cached?.views) {
+      console.log('✓ Using cached views:', fmtNum(cached.views));
     }
   }
+
+  setStatsDisplay(fallbackStats, 'fallback');
 }
 
 /* ══════════════════════════════════════
