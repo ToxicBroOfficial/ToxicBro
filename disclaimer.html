@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
+<!DOCTYPE html>
+<html lang="en" class="is-loading">
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Disclaimer | ToxicBro Official</title>
   <meta name="description" content="Read the ToxicBro disclaimer for creator identity, content boundaries, and brand meaning. ToxicBro is a gaming creator name and not a signal for harmful or unsafe behavior." />
@@ -25,6 +25,12 @@
   <meta name="twitter:image:alt" content="ToxicBro disclaimer page" />
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@400;600;700&family=Exo+2:wght@400;500;600;700&display=swap');
+    <style>
+      html.is-loading, html.is-loading body { overflow: hidden !important; height: 100vh !important; max-height: 100vh !important; }
+      html { scrollbar-gutter: stable both-edges; overflow-y: scroll !important; }
+      html.is-loading #particle-canvas, html.is-loading .cursor, html.is-loading .cursor-ring, html.is-loading #back-to-top { display:none !important; visibility:hidden !important; }
+    </style>
+    <script> (function(){const finishInitialLoad=()=>document.documentElement.classList.remove('is-loading'); if(document.readyState==='complete') finishInitialLoad(); else { window.addEventListener('load', finishInitialLoad,{once:true}); setTimeout(finishInitialLoad,3000); }})();</script>
     :root{--r:#E8001C;--r2:#FF2A40;--card:rgba(17,17,17,.94);--text:#f4f4f4;--muted:#a5a5a5;--border:rgba(232,0,28,.18);--font-display:'Bebas Neue',sans-serif;--font-ui:'Rajdhani',sans-serif;--font-body:'Exo 2',sans-serif;--ease-out:cubic-bezier(0.25,0.46,0.45,0.94)}
     *{box-sizing:border-box}
     html{scroll-behavior:smooth}

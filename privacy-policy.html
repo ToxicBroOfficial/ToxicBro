@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="is-loading">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -23,6 +23,12 @@
   <meta name="twitter:creator" content="@ToxicBroYT" />
   <meta name="twitter:image" content="https://yt3.ggpht.com/LmB6wCkQeORoiLnKTcTL1xAbI1-5qGQz4pyFkwEQgmH0Swm9uN6Zj2sTZmqRSPAH3EgV-i9lng=s800-c-k-c0x00ffffff-no-rj" />
   <meta name="twitter:image:alt" content="ToxicBro privacy policy page" />
+  <style>
+    html.is-loading, html.is-loading body { overflow: hidden !important; height: 100vh !important; max-height: 100vh !important; }
+    html { scrollbar-gutter: stable both-edges; overflow-y: scroll !important; }
+    html.is-loading #particle-canvas, html.is-loading .cursor, html.is-loading .cursor-ring, html.is-loading #back-to-top { display:none !important; visibility:hidden !important; }
+  </style>
+  <script> (function(){const finishInitialLoad=()=>document.documentElement.classList.remove('is-loading'); if(document.readyState==='complete') finishInitialLoad(); else { window.addEventListener('load', finishInitialLoad,{once:true}); setTimeout(finishInitialLoad,3000); }})();</script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@400;600;700&family=Exo+2:wght@400;500;600;700&display=swap');
     :root{--r:#E8001C;--r2:#FF2A40;--card:rgba(17,17,17,.94);--text:#f4f4f4;--muted:#a5a5a5;--border:rgba(232,0,28,.18);--font-display:'Bebas Neue',sans-serif;--font-ui:'Rajdhani',sans-serif;--font-body:'Exo 2',sans-serif;--ease-out:cubic-bezier(0.25,0.46,0.45,0.94)}
