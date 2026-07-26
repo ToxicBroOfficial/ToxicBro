@@ -1425,21 +1425,12 @@ function initHamburger() {
   const mob = document.getElementById('mob-menu');
   if (!ham || !mob) return;
 
-  // Robust toggle handler: attach to click and pointerdown with a short debounce
-  let _lastToggle = 0;
-  function toggleMenu(e) {
-    // Prevent toggling while initial loading lock is active
-    if (document.documentElement.classList.contains('is-loading')) return;
-    // Simple debounce to avoid double-firing (pointerdown + click)
-    const now = Date.now();
-    if (now - _lastToggle < 250) return;
-    _lastToggle = now;
-    const open = mob.classList.toggle('open');
+  const setMenuState = (open) => {
+    mob.classList.toggle('open', open);
     ham.classList.toggle('open', open);
     ham.setAttribute('aria-expanded', String(open));
     document.body.classList.toggle('menu-open', open);
-    // Explicitly set inline styles as a robust fallback when CSS rules
-    // may not apply reliably after a desktop resize.
+
     if (open) {
       mob.style.display = 'flex';
       mob.style.opacity = '1';
@@ -1451,24 +1442,33 @@ function initHamburger() {
       mob.style.visibility = 'hidden';
       mob.style.pointerEvents = 'none';
     }
-    if (e && typeof e.preventDefault === 'function') e.preventDefault();
-  }
+  };
 
-  ham.addEventListener('click', toggleMenu);
-  ham.addEventListener('pointerdown', toggleMenu);
-  ham.addEventListener('touchstart', toggleMenu);
-  ham.addEventListener('keydown', (ev) => {
-    if (ev.key === 'Enter' || ev.key === ' ') toggleMenu(ev);
+  ham.addEventListener('click', (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    const isOpen = mob.classList.contains('open');
+    setMenuState(!isOpen);
   });
 
-  mob.querySelectorAll('a').forEach(a => {
-    a.addEventListener('click', () => {
-      mob.classList.remove('open');
-      ham.classList.remove('open');
-      ham.setAttribute('aria-expanded', 'false');
-      document.body.classList.remove('menu-open');
-    });
+  document.addEventListener('click', (event) => {
+    if (!mob.classList.contains('open')) return;
+    if (event.target === ham || ham.contains(event.target)) return;
+    if (event.target === mob || mob.contains(event.target)) return;
+    setMenuState(false);
   });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && mob.classList.contains('open')) {
+      setMenuState(false);
+    }
+  });
+
+  mob.querySelectorAll('a').forEach((link) => {
+    link.addEventListener('click', () => setMenuState(false));
+  });
+
+  setMenuState(false);
 }
 
 if (document.readyState === 'complete') {
