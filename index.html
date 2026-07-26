@@ -354,6 +354,8 @@
       visibility: hidden !important;
       pointer-events: none !important;
       transition: none !important;
+      /* Ensure overlay appears above the fixed header on small viewports */
+      z-index: 1101;
     }
     .mobile-overlay.open {
       display: flex !important;
@@ -398,15 +400,30 @@
       will-change: auto;
     }
 
-    /* Nav hide on scroll */
+    /* Nav appearance */
     #nav {
       position: fixed;
       top: 0;
       left: 0;
       right: 0;
       z-index: 1000;
-      transition: transform 0.3s ease;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      transition: transform 0.3s ease, background-color 0.25s ease, box-shadow 0.25s ease, backdrop-filter 0.25s ease;
       transform: translateY(0);
+      /* Keep header readable: use a subtle dark background by default */
+      background: rgba(6,6,8,0.92);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.45);
+      backdrop-filter: blur(4px);
+      padding: 0 1.25rem;
+    }
+
+    /* When scrolled, give the header a solid background for contrast */
+    #nav.scrolled {
+      background: rgba(6,6,8,0.95);
+      backdrop-filter: blur(6px);
+      box-shadow: 0 6px 18px rgba(0,0,0,0.6);
     }
 
     #nav.hidden {
@@ -457,6 +474,25 @@
         font-size: 1.2rem;
       }
     }
+    /* Header / Nav responsiveness */
+    .nav-links { display:flex; gap:1rem; align-items:center; }
+    .hamburger { display:none; position:relative; z-index:1102; pointer-events:auto; }
+    .nav-logo { display:inline-flex; align-items:center; gap:6px; font-weight:700; }
+    .nav-links a { color: rgba(255,255,255,0.95); font-size:0.95rem; letter-spacing:0.06em; padding:8px 6px; }
+    .nav-sub-btn { margin-left: 0.5rem; }
+    @media (max-width: 900px) {
+      .nav-links { display:none; }
+      .nav-sub-btn { display:none; }
+      .hamburger { display:flex; }
+      #nav { padding: 0.6rem 1rem; }
+      .nav-logo { font-size: 1.05rem; }
+      .mobile-overlay { padding: 1.25rem; gap: 0.75rem; align-items:flex-start; }
+      .mobile-overlay a { padding: 14px 0; width:100%; display:block; font-size:1.05rem; border-bottom:1px solid rgba(255,255,255,0.03); }
+    }
+
+    /* Ensure main content is offset to account for the fixed header */
+    #main-content { padding-top: calc(64px + 1rem); }
+    @media (max-width: 900px) { #main-content { padding-top: calc(56px + 1rem); } }
   </style>
 
 <body>
@@ -1297,6 +1333,9 @@ window.addEventListener('scroll', () => {
   
   // Hide/show nav based on scroll
   if (nav) {
+    // Add scrolled state once the page moves away from the top to improve contrast
+    nav.classList.toggle('scrolled', currentScrollY > 8);
+
     if (currentScrollY > 100 && scrollDirection === 'down') {
       nav.classList.add('hidden');
     } else {
@@ -1323,14 +1362,24 @@ function initHamburger() {
   const mob = document.getElementById('mob-menu');
   if (!ham || !mob) return;
 
-  ham.addEventListener('click', () => {
+  // Robust toggle handler: attach to click and pointerdown with a short debounce
+  let _lastToggle = 0;
+  function toggleMenu(e) {
     // Prevent toggling while initial loading lock is active
     if (document.documentElement.classList.contains('is-loading')) return;
+    // Simple debounce to avoid double-firing (pointerdown + click)
+    const now = Date.now();
+    if (now - _lastToggle < 250) return;
+    _lastToggle = now;
     const open = mob.classList.toggle('open');
     ham.classList.toggle('open', open);
     ham.setAttribute('aria-expanded', String(open));
     document.body.classList.toggle('menu-open', open);
-  });
+    if (e && typeof e.preventDefault === 'function') e.preventDefault();
+  }
+
+  ham.addEventListener('click', toggleMenu);
+  ham.addEventListener('pointerdown', toggleMenu);
 
   mob.querySelectorAll('a').forEach(a => {
     a.addEventListener('click', () => {
