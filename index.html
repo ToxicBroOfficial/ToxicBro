@@ -1,10 +1,36 @@
 ﻿<!DOCTYPE html>
 <html lang="en" prefix="og: https://ogp.me/ns#" class="is-loading">
 <head>
-  <style>
-html.is-loading, html.is-loading body { overflow: hidden !important; height: 100vh !important; max-height: 100vh !important; }
-html { scrollbar-gutter: stable both-edges; overflow-y: auto; }
-</style>
+<style>
+  html.is-loading, html.is-loading body {
+    overflow: hidden !important;
+    height: 100vh !important;
+    max-height: 100vh !important;
+    margin: 0 !important;
+  }
+
+  html {
+    scrollbar-gutter: stable both-edges;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #e8001c #050505;
+  }
+
+  html::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+  }
+
+  html::-webkit-scrollbar-track {
+    background: #050505;
+  }
+
+  html::-webkit-scrollbar-thumb {
+    background: #e8001c;
+    border-radius: 6px;
+    border: 3px solid rgba(0,0,0,0.12);
+  }
+  </style>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover"/>
   <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
