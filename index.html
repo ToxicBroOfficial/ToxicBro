@@ -2,7 +2,18 @@
 <html lang="en" prefix="og: https://ogp.me/ns#">
 <head>
   <style>
-    /* Keep the homepage on the browser's native scrollbar to avoid load-time conflicts */
+    /* Hide visible scrollbars as early as possible while preserving scroll functionality */
+    html, body {
+      overflow-x: hidden;
+      overflow-y: auto; /* allow scrolling during load */
+      scrollbar-width: none; /* Firefox */
+      -ms-overflow-style: none; /* IE 10+ */
+    }
+    html::-webkit-scrollbar, body::-webkit-scrollbar { /* WebKit browsers */
+      width: 0px;
+      height: 0px;
+      background: transparent;
+    }
   </style>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover"/>
