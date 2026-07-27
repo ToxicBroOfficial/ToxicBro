@@ -299,6 +299,25 @@
 
 </style>
   <style>
+    /* Homepage: hide visible scrollbars but keep scrolling functional */
+    html, body {
+      overflow-x: hidden;
+      overflow-y: auto; /* allow scrolling */
+    }
+    /* Firefox */
+    html {
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+    /* WebKit (Chrome, Safari, Edge) — use zero-size instead of display:none */
+    html::-webkit-scrollbar,
+    body::-webkit-scrollbar {
+      width: 0px;
+      height: 0px;
+      background: transparent;
+    }
+  </style>
+  <style>
     /* Mobile: show only the main featured video, hide side cards */
     @media (max-width: 640px) {
       html, html.is-loading, html.is-loading body { background: #050505 !important; -webkit-text-size-adjust: 100%; -moz-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
