@@ -1,0 +1,7 @@
+/pages/* /:splat 301
+/about /about.html 301
+/achievements /achievements.html 301
+/biography /biography.html 301
+/contact /contact.html 301
+/privacy-policy /privacy-policy.html 301
+/disclaimer /disclaimer.html 301

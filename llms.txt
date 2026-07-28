@@ -1,0 +1,12 @@
+# ToxicBro
+
+ToxicBro is the official website for the Bangladeshi gaming creator and YouTuber ToxicBro. It highlights gameplay videos, achievements, biography, community links, and contact information.
+
+## Key pages
+ - [Home](https://toxicbro.pages.dev/)
+ - [About](https://toxicbro.pages.dev/about)
+ - [Biography](https://toxicbro.pages.dev/biography)
+ - [Achievements](https://toxicbro.pages.dev/achievements)
+ - [Contact](https://toxicbro.pages.dev/contact)
+ - [Privacy Policy](https://toxicbro.pages.dev/privacy-policy)
+- [YouTube Channel](https://www.youtube.com/@ToxicBroYT)

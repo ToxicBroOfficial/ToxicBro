@@ -1,0 +1,8 @@
+{
+  "name": "toxicbro-site",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "update-seo-data": "node scripts/update-seo-data.js"
+  }
+}
