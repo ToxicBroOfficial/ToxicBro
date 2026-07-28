@@ -533,45 +533,52 @@ html::-webkit-scrollbar-thumb {
     /* Back to Top Button */
     .back-to-top {
       position: fixed;
-      bottom: 2rem;
-      right: 2rem;
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      background: var(--r);
+      bottom: 1.5rem;
+      right: 1.5rem;
+      width: 3.25rem;
+      height: 3.25rem;
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--r), var(--r2));
       color: #fff;
-      border: none;
-      font-size: 1.5rem;
+      border: 1px solid rgba(255,255,255,0.18);
+      font-size: 1.25rem;
+      line-height: 1;
       cursor: pointer;
       z-index: 999;
       opacity: 0;
       visibility: hidden;
-      transition: all 0.3s ease;
+      transform: translateY(10px) scale(0.96);
+      transition: transform 0.25s ease, opacity 0.25s ease, visibility 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 4px 12px rgba(232, 0, 28, 0.3);
-      font-weight: bold;
+      box-shadow: 0 12px 30px rgba(232, 0, 28, 0.28);
+      backdrop-filter: blur(8px);
+      font-weight: 700;
+      pointer-events: auto;
     }
 
-    .back-to-top:hover {
-      background: var(--r2);
-      transform: translateY(-3px);
-      box-shadow: 0 6px 16px rgba(232, 0, 28, 0.4);
+    .back-to-top:hover,
+    .back-to-top:focus-visible {
+      background: linear-gradient(135deg, var(--r2), #ff4962);
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 16px 34px rgba(232, 0, 28, 0.35);
+      outline: none;
     }
 
     .back-to-top.visible {
       opacity: 1;
       visibility: visible;
+      transform: translateY(0) scale(1);
     }
 
     @media (max-width: 640px) {
       .back-to-top {
         bottom: 1rem;
         right: 1rem;
-        width: 45px;
-        height: 45px;
-        font-size: 1.2rem;
+        width: 3rem;
+        height: 3rem;
+        font-size: 1.1rem;
       }
     }
     /* Header / Nav responsiveness */
@@ -2200,14 +2207,23 @@ if (yearSpan) {
 /* ══════════════════════════════════════
    BACK TO TOP BUTTON
 ══════════════════════════════════════ */
-const backToTopBtn = document.getElementById('back-to-top');
-if (backToTopBtn) {
-  backToTopBtn.addEventListener('click', () => {
+function initBackToTop() {
+  const backToTopBtn = document.getElementById('back-to-top');
+  if (!backToTopBtn) return;
+
+  backToTopBtn.addEventListener('click', (event) => {
+    event.preventDefault();
     window.scrollTo({
       top: 0,
       behavior: 'smooth'
     });
   });
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initBackToTop, { once: true });
+} else {
+  initBackToTop();
 }
 </script>
 
