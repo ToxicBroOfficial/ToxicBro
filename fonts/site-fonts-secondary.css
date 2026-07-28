@@ -1,0 +1,63 @@
+@font-face {
+  font-family: 'Bebas Neue';
+  src: url('./JTUSjIg69CK48gW7PXooxW4.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: optional;
+}
+
+@font-face {
+  font-family: 'Rajdhani';
+  src: url('./LDIxapCSOBg7S-QT7q4A.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: optional;
+}
+
+@font-face {
+  font-family: 'Rajdhani';
+  src: url('./LDI2apCSOBg7S-QT7pbYF8Os.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+  font-display: optional;
+}
+
+@font-face {
+  font-family: 'Rajdhani';
+  src: url('./LDI2apCSOBg7S-QT7pa8FsOs.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: optional;
+}
+
+@font-face {
+  font-family: 'Exo 2';
+  src: url('./7cH1v4okm5zmbvwkAx_sfcEuiD8jvvKcPg.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: optional;
+}
+
+@font-face {
+  font-family: 'Exo 2';
+  src: url('./7cH1v4okm5zmbvwkAx_sfcEuiD8jYPWcPg.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: optional;
+}
+
+@font-face {
+  font-family: 'Exo 2';
+  src: url('./7cH1v4okm5zmbvwkAx_sfcEuiD8jWfWcPg.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+  font-display: optional;
+}
+
+@font-face {
+  font-family: 'Exo 2';
+  src: url('./7cH1v4okm5zmbvwkAx_sfcEuiD8jjPKcPg.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: optional;
+}
