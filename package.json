@@ -6,6 +6,6 @@
     "update-seo-data": "node scripts/update-seo-data.js"
   },
   "dependencies": {
-    "axios": "^1.18.1"
+    "axios": "^1.19.0"
   }
 }
