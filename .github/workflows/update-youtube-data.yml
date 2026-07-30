@@ -15,6 +15,9 @@ on:
 jobs:
   update-data:
     runs-on: ubuntu-latest
+    concurrency:
+      group: update-youtube-data
+      cancel-in-progress: false
     permissions:
       contents: write
       
@@ -27,22 +30,25 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '20'
+          cache: npm
 
       - name: Install dependencies
-        run: npm install axios
+        run: npm ci
 
       - name: Fetch YouTube data (OPTIMIZED)
         env:
           YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
           YOUTUBE_API_KEY_FALLBACK: ${{ secrets.YOUTUBE_API_KEY_FALLBACK }}
+          FORCE_VIDEO_REFRESH: ${{ github.event_name == 'repository_dispatch' && 'true' || 'false' }}
+          DISPATCH_VIDEO_ID: ${{ github.event.client_payload.video_id || github.event.client_payload.videoId || github.event.client_payload.id || '' }}
         run: |
           # Guard execution at runtime to avoid workflow validation errors when secrets are not present
           if [ -n "${{ secrets.YOUTUBE_API_KEY }}" ] || [ -n "${{ secrets.YOUTUBE_API_KEY_FALLBACK }}" ]; then
-            echo "🚀 Found YouTube API key — running fetch script"
+            echo "Found YouTube API key - running fetch script"
             node .github/scripts/fetch-youtube-data.js
           else
-            echo "⚠️  No YouTube API keys configured — skipping fetch step"
+            echo "No YouTube API keys configured - skipping fetch step"
           fi
 
       - name: Update SEO metadata
@@ -97,13 +103,13 @@ jobs:
           
           # Prepare commit message based on what changed
           if [ "${{ steps.check_changes.outputs.video_changed }}" == "true" ] && [ "${{ steps.check_changes.outputs.stats_changed }}" == "true" ]; then
-            MESSAGE="🤖 Auto-update: New video + updated stats ($(date -u +'%Y-%m-%d %H:%M:%S UTC'))"
+            MESSAGE="Auto-update: New video + updated stats ($(date -u +'%Y-%m-%d %H:%M:%S UTC'))"
           elif [ "${{ steps.check_changes.outputs.video_changed }}" == "true" ]; then
-            MESSAGE="📹 Auto-update: New video detected ($(date -u +'%Y-%m-%d %H:%M:%S UTC'))"
+            MESSAGE="Auto-update: New video detected ($(date -u +'%Y-%m-%d %H:%M:%S UTC'))"
           elif [ "${{ steps.check_changes.outputs.sitemap_changed }}" == "true" ]; then
-            MESSAGE="🗺️ Auto-update: Sitemap refreshed ($(date -u +'%Y-%m-%d %H:%M:%S UTC'))"
+            MESSAGE="Auto-update: Sitemap refreshed ($(date -u +'%Y-%m-%d %H:%M:%S UTC'))"
           else
-            MESSAGE="📊 Auto-update: Subscriber stats refreshed ($(date -u +'%Y-%m-%d %H:%M:%S UTC'))"
+            MESSAGE="Auto-update: Subscriber stats refreshed ($(date -u +'%Y-%m-%d %H:%M:%S UTC'))"
           fi
           
           git add -A
@@ -113,7 +119,7 @@ jobs:
       - name: Deploy summary
         if: steps.check_changes.outputs.files_changed == 'true'
         run: |
-          echo "📊 UPDATE DEPLOYED"
+          echo "UPDATE DEPLOYED"
           echo "================="
           echo "Video updated: ${{ steps.check_changes.outputs.video_changed }}"
           echo "Stats updated: ${{ steps.check_changes.outputs.stats_changed }}"
@@ -124,7 +130,7 @@ jobs:
       - name: Optimization status
         if: steps.check_changes.outputs.files_changed == 'false'
         run: |
-          echo "✅ OPTIMIZATION WORKING"
+          echo "OPTIMIZATION WORKING"
           echo "======================="
           echo "No changes detected - skipping commit & deploy"
           echo "This reduces:"

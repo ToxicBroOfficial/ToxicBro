@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 /**
  * ToxicBro YouTube Data Fetcher - OPTIMIZED
- * Runs via GitHub Actions hourly
+ * Runs via GitHub Actions daily
  *
  * Smart update strategy:
  * - ALWAYS: Fetch channel stats (subscribers, views, video count)
  * - CHECK: Use YouTube RSS feed to detect new videos (free, lightweight)
- * - IF NEW VIDEO: Fetch full video details and update videos.json
+ * - IF NEW VIDEO OR UPLOAD TRIGGER: Fetch full video details and update videos.json
  * - IF ONLY STATS: Update channel.json only (no unnecessary commits)
  *
  * Goals: Minimize API usage, commits, and Cloudflare deployments
@@ -31,6 +31,8 @@ const STATE_FILE = path.join(__dirname, '../../.github/scripts/state.json');
 // API keys from GitHub Secrets
 const API_KEY = process.env.YOUTUBE_API_KEY;
 const API_KEY_FALLBACK = process.env.YOUTUBE_API_KEY_FALLBACK;
+const FORCE_VIDEO_REFRESH = process.env.FORCE_VIDEO_REFRESH === 'true';
+const DISPATCH_VIDEO_ID = (process.env.DISPATCH_VIDEO_ID || '').trim();
 
 if (!API_KEY && !API_KEY_FALLBACK) {
   console.error('ERROR: YOUTUBE_API_KEY or YOUTUBE_API_KEY_FALLBACK not set in GitHub Secrets');
@@ -40,6 +42,12 @@ if (!API_KEY && !API_KEY_FALLBACK) {
 console.log('Starting Optimized YouTube Data Fetch...');
 console.log(`Timestamp: ${new Date().toISOString()}`);
 console.log('Update Strategy: Smart detection for stats + new videos only\n');
+if (FORCE_VIDEO_REFRESH) {
+  console.log('Upload-triggered run: forcing full video refresh.');
+  if (DISPATCH_VIDEO_ID) {
+    console.log(`Dispatch video id: ${DISPATCH_VIDEO_ID}`);
+  }
+}
 
 /**
  * Load previous state to detect new videos
@@ -120,7 +128,7 @@ async function checkRSSForNewVideo() {
   } catch (err) {
     console.error(`RSS feed check failed: ${err.message}`);
     console.warn('   Videos.json will remain unchanged from last update');
-    console.warn('   Retrying RSS feed check in 1 hour');
+    console.warn('   Retrying RSS feed check on the next scheduled run');
     return null;
   }
 }
@@ -278,7 +286,7 @@ async function main() {
     let stateChanged = false;
     let filesToCommit = [];
 
-    // ===== STEP 1: ALWAYS FETCH CHANNEL STATS (REQUIRED EVERY HOUR) =====
+    // ===== STEP 1: ALWAYS FETCH CHANNEL STATS =====
     console.log('\nSTEP 1: Fetching channel statistics...');
     let stats;
     let lastError;
@@ -331,14 +339,18 @@ async function main() {
     const currentState = loadState();
 
     let newVideoDetected = false;
+    let stateVideoId = DISPATCH_VIDEO_ID || rssLatest?.id || null;
     if (rssLatest && rssLatest.id !== currentState.lastVideoId) {
       console.log(`New video detected! Last was: ${currentState.lastVideoId || 'none'}`);
+      newVideoDetected = true;
+    } else if (FORCE_VIDEO_REFRESH) {
+      console.log('Upload trigger received - refreshing video list even if RSS has not updated yet');
       newVideoDetected = true;
     } else {
       console.log('  No new videos detected');
     }
 
-    // ===== STEP 3: FETCH FULL VIDEO DATA ONLY IF NEW VIDEO DETECTED =====
+    // ===== STEP 3: FETCH FULL VIDEO DATA ONLY IF NEW VIDEO DETECTED OR UPLOAD TRIGGERED =====
     if (newVideoDetected) {
       console.log('\nSTEP 3: Fetching full video details (new video detected)...');
       let videos;
@@ -363,7 +375,7 @@ async function main() {
         }
       }
 
-      if (!videos) {
+      if (!videos || videos.length === 0) {
         throw lastError || new Error('Could not fetch videos');
       }
 
@@ -381,8 +393,9 @@ async function main() {
       filesToCommit.push(VIDEOS_FILE);
 
       // Update state with new video ID
+      stateVideoId = videos[0]?.id || stateVideoId || currentState.lastVideoId || null;
       saveState({
-        lastVideoId: rssLatest.id,
+        lastVideoId: stateVideoId,
         lastUpdate: new Date().toISOString(),
       });
       
@@ -464,7 +477,3 @@ function loadChannelJson() {
 }
 
 main();
-
-
-
-

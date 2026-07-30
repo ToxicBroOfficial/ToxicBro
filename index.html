@@ -1285,18 +1285,16 @@ const VIDEOS_JSON_URL = '/videos.json';
 const CHANNEL_JSON_URL = '/channel.json';
 let allVideos = [];
 const coarsePointer = window.matchMedia('(pointer: coarse)').matches;
+const DEBUG_MODE = new URLSearchParams(window.location.search).has('debug');
+const debugWarn = (...args) => {
+  if (DEBUG_MODE) console.warn(...args);
+};
+const debugError = (...args) => {
+  if (DEBUG_MODE) console.error(...args);
+};
 
 function getFallbackStats() {
-  try {
-    const cached = getStatsCache();
-    return {
-      subscribers: cached?.subscribers ?? DEFAULT_FALLBACK_STATS.subscribers,
-      views: cached?.views ?? DEFAULT_FALLBACK_STATS.views,
-      videos: cached?.videos ?? DEFAULT_FALLBACK_STATS.videos,
-    };
-  } catch (err) {
-    return DEFAULT_FALLBACK_STATS;
-  }
+  return DEFAULT_FALLBACK_STATS;
 }
 
 function setStatsDisplay(statsData, source = 'live') {
@@ -1332,7 +1330,7 @@ function setStatsDisplay(statsData, source = 'live') {
       statusEl.textContent = 'Refreshing latest channel updates...';
       statusEl.style.color = 'var(--muted)';
     } else {
-      statusEl.textContent = 'Live channel stats are currently updating.';
+      statusEl.textContent = 'Daily channel snapshot is loaded.';
       statusEl.style.color = 'var(--text)';
     }
   }
@@ -1993,20 +1991,20 @@ async function loadVideos() {
       // Save to browser cache as fallback
       saveBrowserCache(allVideos);
     } else {
-      console.warn('⚠️ Videos array missing or invalid');
+      debugWarn('Videos array missing or invalid');
       allVideos = [];
     }
 
   } catch (err) {
-    console.error('✕ Error loading static JSON files:', err.message);
-    console.error('📦 Attempting to use browser cache fallback...');
+    debugError('Error loading static JSON files:', err.message);
+    debugError('Attempting to use browser cache fallback...');
 
     // Try browser cache as fallback
     const cachedVideos = getBrowserCachedVideos();
     if (cachedVideos.length > 0) {
       allVideos = cachedVideos;
     } else {
-      console.warn('⚠️ No cached data available');
+      debugWarn('No cached data available');
       allVideos = [];
     }
   }
@@ -2036,7 +2034,7 @@ function getBrowserCachedVideos() {
       }
     }
   } catch (err) {
-    console.warn('Could not read browser cache:', err.message);
+    debugWarn('Could not read browser cache:', err.message);
   }
   return [];
 }
@@ -2048,7 +2046,7 @@ function saveBrowserCache(videos) {
       updatedAt: new Date().toISOString(),
     }));
   } catch (err) {
-    console.warn('Could not save browser cache:', err.message);
+    debugWarn('Could not save browser cache:', err.message);
   }
 }
 
@@ -2072,7 +2070,7 @@ function getStatsCache() {
       }
     }
   } catch (err) {
-    console.warn('Could not read stats cache:', err.message);
+    debugWarn('Could not read stats cache:', err.message);
   }
   return null;
 }
@@ -2087,7 +2085,7 @@ function saveStatsCache(statsData) {
     };
     localStorage.setItem('toxicbro_stats_cache', JSON.stringify(updated));
   } catch (err) {
-    console.warn('Could not save stats cache:', err.message);
+    debugWarn('Could not save stats cache:', err.message);
   }
 }
 
@@ -2100,7 +2098,7 @@ function useStatsFallback(type) {
   };
 
   if (!cached) {
-    console.warn('⚠️ No stats cache available for fallback');
+    debugWarn('No stats cache available for fallback');
   }
 
   setStatsDisplay(fallbackStats, 'fallback');
@@ -2108,7 +2106,7 @@ function useStatsFallback(type) {
 
 /* ══════════════════════════════════════
    AUTO REFRESH VIDEO LIST FROM STATIC JSON
-   Data is updated hourly by GitHub Actions
+   Data is refreshed daily by GitHub Actions
    Frontend checks for updates every 60 minutes
 ══════════════════════════════════════ */
 setInterval(() => {
@@ -2122,10 +2120,9 @@ function generateMockVideos() {
 }
 
 /* ══════════════════════════════════════
-   SUB COUNT (Fetched via YouTube API)
-   Already handled in loadVideos()
+   SUB COUNT (Fetched from daily static JSON)
 ══════════════════════════════════════ */
-// Subscriber count is now fetched from YouTube API v3 in loadVideos()
+// Subscriber count is loaded from channel.json in loadVideos().
 
 /* ══════════════════════════════════════
    EMAIL POPUP HANDLER
@@ -2232,7 +2229,4 @@ if (document.readyState === 'loading') {
 
 </body>
 </html>
-
-
-
 
