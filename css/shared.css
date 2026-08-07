@@ -1,0 +1,88 @@
+/* ToxicBro Shared Base Styles */
+:root {
+  --r: #E8001C;
+  --r2: #FF2A40;
+  --bg: #050505;
+  --card: #0f0f10;
+  --card2: #141414;
+  --text: #f4f4f4;
+  --muted: #a5a5a5;
+  --border: rgba(255,255,255,.12);
+  --border-glass: rgba(232,0,28,.2);
+  --font-display: 'Bebas Neue', sans-serif;
+  --font-ui: 'Rajdhani', sans-serif;
+  --font-body: 'Exo 2', sans-serif;
+  --ease-out: cubic-bezier(0.25,0.46,0.45,0.94);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; background: #050505; overflow-x: hidden; }
+body {
+  font-family: var(--font-body), sans-serif;
+  background: radial-gradient(circle at 20% 0%, rgba(232,0,28,.14), transparent 28rem),
+              linear-gradient(135deg, #050505 0%, #0b0b0d 55%, #050505 100%);
+  color: var(--text); line-height: 1.7; overflow-x: hidden;
+}
+
+.skip-link {
+  position: absolute; left: -9999px; top: 0; z-index: 9999;
+  padding: 12px 16px; background: #e8001c; color: #fff;
+  font-weight: 700; border-radius: 0 0 8px 0;
+}
+.skip-link:focus { left: 0; }
+
+/* Scrollbar */
+html::-webkit-scrollbar { width: 12px; height: 12px; }
+html::-webkit-scrollbar-track { background: #050505; }
+html::-webkit-scrollbar-thumb { background: #e8001c; border-radius: 6px; border: 3px solid rgba(0,0,0,0.12); }
+
+/* Loader */
+html.is-loading, html.is-loading body { overflow: hidden !important; height: 100vh !important; max-height: 100vh !important; }
+
+/* Top link */
+.top-link {
+  display: inline-flex; align-items: center; gap: 8px;
+  margin: 24px 24px 0; padding: 12px 18px; border-radius: 4px;
+  background: linear-gradient(135deg, var(--r), var(--r2));
+  color: #fff; font-weight: 700; text-decoration: none;
+  transition: all 0.3s var(--ease-out);
+  box-shadow: 0 4px 15px rgba(232,0,28,0.3);
+}
+.top-link:hover { transform: translateY(-4px); box-shadow: 0 8px 25px rgba(232,0,28,0.4); }
+
+/* Common card */
+.card {
+  position: relative; overflow: hidden;
+  background: var(--card2);
+  border: 1.5px solid var(--border-glass);
+  border-radius: 8px; padding: 24px;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s var(--ease-out);
+  box-shadow: 0 8px 24px rgba(232,0,28,0.1);
+}
+.card:hover {
+  transform: translateY(-4px);
+  border-color: var(--r);
+  box-shadow: 0 12px 32px rgba(232,0,28,0.2);
+}
+
+/* Hero */
+.hero h1 {
+  font-family: var(--font-display);
+  background: linear-gradient(135deg, #fff 0%, var(--r) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
+
+/* Mobile */
+@media (max-width: 640px) {
+  .wrap { padding: 16px; }
+  .top-link { margin: 16px 16px 0; }
+  .card { padding: 18px; }
+}

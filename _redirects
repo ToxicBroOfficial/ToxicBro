@@ -1,1 +1,13 @@
-/pages/* /:splat 301
+# Extensionless URLs → HTML files
+/about      /about.html     200
+/achievements /achievements.html 200
+/biography  /biography.html 200
+/contact    /contact.html   200
+/disclaimer /disclaimer.html 200
+/privacy-policy /privacy-policy.html 200
+
+# Legacy /pages/ redirect
+/pages/*    /:splat         301
+
+# 404 fallback
+/*          /404.html       404
