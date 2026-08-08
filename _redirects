@@ -1,21 +1,13 @@
-# Extensionless URLs → HTML files
-/about      /about.html     200
-/achievements /achievements.html 200
-/biography  /biography.html 200
-/contact    /contact.html   200
-/disclaimer /disclaimer.html 200
-/privacy-policy /privacy-policy.html 200
-
 # Redirect old .html URLs to extensionless pages
-/about.html      /about           301
+/about.html       /about           301
 /achievements.html /achievements    301
-/biography.html  /biography        301
-/contact.html    /contact          301
-/disclaimer.html /disclaimer       301
+/biography.html   /biography        301
+/contact.html     /contact          301
+/disclaimer.html  /disclaimer       301
 /privacy-policy.html /privacy-policy 301
 
 # Legacy /pages/ redirect
-/pages/*          /:splat         301
+/pages/*           /:splat         301
 
 # 404 fallback
-/*                /404.html       404
+/*                 /404.html       404
