@@ -1,0 +1,11 @@
+/* TEAM */
+Creator: Abdul Gaffar Patowary
+Site: https://toxicbro.pages.dev/
+Twitter: @ToxicBroYT
+From: Bangladesh
+
+/* SITE */
+Last update: 2026-08-08
+Standards: HTML5, CSS3, ES6+
+Components: None (vanilla)
+Software: VS Code, GitHub Actions
