@@ -2,23 +2,12 @@
 <html lang="en" class="is-loading">
 <head>
   <meta charset="UTF-8" />
-  <meta name="theme-color" content="#E8001C"/>
-  <meta name="apple-mobile-web-app-capable" content="yes"/>
-  <meta name="mobile-web-app-capable" content="yes"/>
-  <meta name="format-detection" content="telephone=no"/>
-  <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>About ToxicBro | ToxicBroYT Official | Bangladeshi Gamer</title>
   <meta name="description" content="Official about page for ToxicBro, also known as Toxic Bro and ToxicBroYT, a Bangladeshi gamer and YouTuber known for gameplay videos, Shorts, and the ToxicArmy community." />
   <meta name="robots" content="index, follow" />
-  <meta name="author" content="ToxicBro"/>
-  <meta name="creator" content="ToxicBro"/>
-  <meta name="publisher" content="ToxicBro Official"/>
-  <link rel="alternate" hreflang="en" href="https://toxicbro.pages.dev/"/>
-  <link rel="alternate" hreflang="x-default" href="https://toxicbro.pages.dev/"/>
   <link rel="canonical" href="https://toxicbro.pages.dev/about" />
   <link rel="stylesheet" href="/fonts/site-fonts-secondary.css" />
-  <link rel="stylesheet" href="/css/shared.css" />
   <link rel="manifest" href="/favicon/site.webmanifest" />
   <link rel="icon" href="/favicon.ico" sizes="any" />
   <link rel="icon" href="/favicon/favicon.ico" sizes="any" />
@@ -32,19 +21,204 @@
   <meta property="og:type" content="profile" />
   <meta property="og:url" content="https://toxicbro.pages.dev/about" />
   <meta property="og:image" content="https://yt3.ggpht.com/LmB6wCkQeORoiLnKTcTL1xAbI1-5qGQz4pyFkwEQgmH0Swm9uN6Zj2sTZmqRSPAH3EgV-i9lng=s800-c-k-c0x00ffffff-no-rj" />
-  <meta property="og:image:width" content="1200"/>
-  <meta property="og:image:height" content="630"/>
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:site" content="@ToxicBroYT" />
   <meta name="twitter:image" content="https://yt3.ggpht.com/LmB6wCkQeORoiLnKTcTL1xAbI1-5qGQz4pyFkwEQgmH0Swm9uN6Zj2sTZmqRSPAH3EgV-i9lng=s800-c-k-c0x00ffffff-no-rj" />
   <meta name="twitter:image:alt" content="ToxicBro - Bangladeshi Gamer" />
   <meta name="twitter:creator" content="@ToxicBroYT" />
-  <meta name="twitter:title" content="About ToxicBro | ToxicBroYT Official"/>
-  <meta name="twitter:description" content="Official profile of ToxicBro, also known as Toxic Bro and ToxicBroYT, a Bangladeshi gamer, YouTuber, and community creator."/>
   <meta property="og:site_name" content="ToxicBro Official" />
   <meta property="og:locale" content="en_BD" />
+  <style>
+  .skip-link{position:absolute;left:-9999px;top:0;z-index:9999;padding:12px 16px;background:#e8001c;color:#fff;font-weight:700;border-radius:0 0 8px 0}
+  .skip-link:focus{left:0}
+html.is-loading, html.is-loading body { overflow: hidden !important; height: 100vh !important; max-height: 100vh !important; }
+html { scrollbar-gutter: stable both-edges; overflow-y: scroll !important; }
+
+/* Scrollbar styling - dark track with red thumb to prevent white flash */
+html::-webkit-scrollbar { width: 12px; height: 12px; }
+html::-webkit-scrollbar-track { background: #050505 !important; }
+html::-webkit-scrollbar-thumb { background: #e8001c !important; border-radius: 6px !important; border: 3px solid rgba(0,0,0,0.12) !important; }
+  </style>
   <script> (function(){const finishInitialLoad=()=>document.documentElement.classList.remove('is-loading'); if(document.readyState==='complete') finishInitialLoad(); else { window.addEventListener('load', finishInitialLoad,{once:true}); setTimeout(finishInitialLoad,3000); }})();</script>
-  </head>
+  <style>
+    :root{
+      --r:#E8001C;
+      --r2:#FF2A40;
+      --bg:#050505;
+      --dark2:#0a0a0a;
+      --card:#0f0f10;
+      --card2:#141414;
+      --card3:#1a1a1a;
+      --text:#f4f4f4;
+      --muted:#a5a5a5;
+      --border:rgba(255,255,255,.12);
+      --border2:rgba(255,255,255,.08);
+      --border-glass:rgba(232,0,28,.2);
+      --cyan:#00d9ff;
+      --purple:#8b00ff;
+      --font-display:'Bebas Neue',sans-serif;
+      --font-ui:'Rajdhani',sans-serif;
+      --font-tech:'Exo 2',sans-serif;
+      --font-body:'Exo 2',sans-serif;
+      --ease-out:cubic-bezier(0.25,0.46,0.45,0.94);
+      --ease-spring:cubic-bezier(0.34,1.56,0.64,1);
+      --ease-bounce:cubic-bezier(0.68,-0.55,0.265,1.55);
+    }
+    @keyframes fadeInScale{
+      from{opacity:0;transform:scale(0.95)}
+      to{opacity:1;transform:scale(1)}
+    }
+    @keyframes neonPulse{
+      0%,100%{text-shadow:0 0 10px currentColor,0 0 20px rgba(232,0,28,0.4)}
+      50%{text-shadow:0 0 20px currentColor,0 0 40px rgba(232,0,28,0.6)}
+    }
+    @keyframes glassShimmer{
+      0%{background-position:0% center}
+      100%{background-position:200% center}
+    }
+    @keyframes chromeFade{
+      0%{opacity:0.5;transform:translateX(-100%)}
+      50%{opacity:1}
+      100%{opacity:0.5;transform:translateX(100%)}
+    }
+    @keyframes shockwave{
+      0%{box-shadow:0 0 0 0 rgba(232,0,28,0.7)}
+      70%{box-shadow:0 0 0 15px rgba(232,0,28,0)}
+      100%{box-shadow:0 0 0 0 rgba(232,0,28,0)}
+    }
+    *{box-sizing:border-box}
+    html{overflow-x:hidden;scroll-behavior:smooth;background:#050505}
+    body{margin:0;font-family:var(--font-body),sans-serif;background:
+      radial-gradient(circle at 20% 0%,rgba(232,0,28,.16),transparent 32rem),
+      linear-gradient(135deg,#050505 0%,#0b0b0d 55%,#050505 100%);
+      color:var(--text);line-height:1.7;overflow-x:hidden}
+    a{color:inherit;text-decoration:none}
+    .wrap{max-width:1100px;margin:0 auto;padding:24px}
+    .top-link{
+      display:inline-flex;align-items:center;gap:8px;margin:24px 24px 0;padding:10px 16px;border-radius:4px;
+      background:linear-gradient(135deg,var(--r),var(--r2));
+      color:white;font-weight:700;text-decoration:none;
+      transition:all 0.3s var(--ease-out);
+      backdrop-filter:blur(10px);
+      box-shadow:0 4px 15px rgba(232,0,28,0.3);
+    }
+    .top-link:hover{
+      transform:translateY(-4px);
+      box-shadow:0 8px 25px rgba(232,0,28,0.4);
+    }
+    .hero{padding:32px 0 28px;display:grid;gap:24px;grid-template-columns:1.1fr .9fr;align-items:center;min-height:52vh}
+    .hero h1{
+      font-size:clamp(2rem,4vw,3.3rem);margin:0 0 10px;line-height:1.1;
+      font-family:var(--font-display);
+      background:linear-gradient(135deg,#fff 0%,var(--r) 100%);
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+      background-clip:text;
+      animation:neonPulse 3s ease-in-out infinite;
+    }
+    .hero p{color:var(--muted);font-size:1.02rem}
+    .panel{
+      position:relative;overflow:hidden;
+      background:linear-gradient(135deg,rgba(232,0,28,.12),rgba(255,255,255,.02));
+      border:1.5px solid var(--border-glass);
+      border-radius:12px;padding:24px;
+      backdrop-filter:blur(10px);
+      box-shadow:0 8px 32px rgba(232,0,28,0.1);
+    }
+    .panel::before,.card::before{
+      content:'';position:absolute;inset:0 0 auto;height:1px;
+      background:linear-gradient(90deg,transparent,var(--r),transparent);
+      opacity:.7;
+    }
+    .pill-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
+    .pill{
+      border:1.5px solid var(--border-glass);
+      padding:8px 14px;border-radius:999px;font-size:.8rem;text-transform:uppercase;letter-spacing:.1em;color:#fff;
+      background:rgba(232,0,28,0.08);
+      transition:all 0.25s var(--ease-out);
+      backdrop-filter:blur(8px);
+    }
+    .pill:hover{
+      background:rgba(232,0,28,0.15);
+      border-color:var(--r);
+      transform:translateY(-2px);
+      box-shadow:0 4px 12px rgba(232,0,28,0.2);
+    }
+    .btn{
+      display:inline-block;margin-top:18px;padding:12px 22px;border-radius:4px;
+      background:linear-gradient(135deg,var(--r),var(--r2));
+      color:white;font-weight:700;
+      transition:all 0.3s var(--ease-out);
+      backdrop-filter:blur(10px);
+      box-shadow:0 4px 15px rgba(232,0,28,0.3);
+      clip-path:polygon(0 0,calc(100% - 12px) 0,100% 50%,calc(100% - 12px) 100%,0 100%);
+    }
+    .btn:hover{
+      transform:translateY(-4px);
+      box-shadow:0 8px 25px rgba(232,0,28,0.5),0 0 20px rgba(232,0,28,0.3);
+    }
+    .btn.secondary{
+      background:rgba(232,0,28,0.1);
+      border:1.5px solid var(--border-glass);
+      margin-left:8px;
+      clip-path:none;
+    }
+    .btn.secondary:hover{
+      background:rgba(232,0,28,0.15);
+      border-color:var(--r);
+    }
+    section{padding:24px 0}
+    .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+    .card{
+      position:relative;overflow:hidden;
+      background:var(--card2);
+      border:1.5px solid var(--border-glass);
+      border-radius:8px;padding:24px;
+      backdrop-filter:blur(10px);
+      transition:all 0.3s var(--ease-out);
+      animation:fadeInScale 0.6s var(--ease-out);
+      box-shadow:0 8px 24px rgba(232,0,28,0.1);
+    }
+    .card:hover{
+      transform:translateY(-4px);
+      border-color:var(--r);
+      box-shadow:0 12px 32px rgba(232,0,28,0.2);
+    }
+    h2{font-size:1.15rem;margin-top:0;margin-bottom:8px;font-family:var(--font-ui);font-weight:700;}
+    ul{padding-left:20px;color:var(--muted)}
+    .small{color:var(--muted);font-size:.95rem}
+    .socials a{
+      display:inline-block;margin-right:16px;margin-top:12px;
+      padding:8px 14px;
+      border-radius:4px;
+      border:1px solid var(--border-glass);
+      background:rgba(232,0,28,0.08);
+      transition:all 0.2s var(--ease-out);
+      backdrop-filter:blur(8px);
+    }
+    .socials a:hover{
+      background:rgba(232,0,28,0.15);
+      border-color:var(--r);
+      transform:translateY(-2px);
+      box-shadow:0 4px 12px rgba(232,0,28,0.2);
+    }
+    @media (max-width:900px){.hero,.grid{grid-template-columns:1fr}}
+    @media (max-width:640px){
+      .wrap{padding:16px}
+      .top-link{margin:16px 16px 0}
+      .hero{padding:18px 0 20px}
+      .panel,.card{padding:18px}
+      .pill-row{gap:8px}
+      .pill{width:100%;text-align:center}
+      .btn,.btn.secondary{display:flex;justify-content:center;width:100%;margin-left:0}
+      .btn.secondary{margin-top:10px}
+      .socials a{margin-right:8px;margin-top:6px}
+    }
+    @media (prefers-reduced-motion:reduce){
+      *{animation-duration:.01ms!important;transition-duration:.01ms!important}
+    }
+  </style>
+</head>
 <body>
   <a class="skip-link" href="#main-content">Skip to main content</a>
   <a class="top-link" href="/">⬅ Visit Home</a>
@@ -138,33 +312,7 @@
     }
   }
   </script>
-  <button class="theme-toggle-float" id="theme-toggle-float" aria-label="Toggle dark mode" title="Toggle dark mode"><span aria-hidden="true">🌙</span></button>
-  <script>
-  (function() {
-    const toggle = document.getElementById('theme-toggle-float');
-    const icon = toggle ? toggle.querySelector('span') : null;
-    const root = document.documentElement;
-    const stored = localStorage.getItem('theme');
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const isDark = stored ? stored === 'dark' : prefersDark;
-
-    const applyTheme = (dark) => {
-      root.setAttribute('data-theme', dark ? 'dark' : 'light');
-      if (icon) icon.textContent = dark ? '☀️' : '🌙';
-    };
-
-    applyTheme(isDark);
-
-    if (toggle) {
-      toggle.addEventListener('click', () => {
-        const current = root.getAttribute('data-theme') === 'dark';
-        applyTheme(!current);
-        localStorage.setItem('theme', !current ? 'dark' : 'light');
-      });
-    }
-  })();
-  </script>
- </body>
+</body>
 </html>
 
 
