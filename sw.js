@@ -19,6 +19,7 @@ const STATIC_ASSETS = [
   '/favicon/web-app-manifest-192x192.png',
   '/favicon/web-app-manifest-512x512.png',
   '/images/logo.png',
+  '/images/Abdul Gaffar Patowary (ToxicBro).jpeg',
   '/fonts/site-fonts.css',
   '/fonts/site-fonts-secondary.css'
 ];
