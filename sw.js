@@ -1,4 +1,4 @@
-const CACHE_NAME = 'toxicbro-v1';
+const CACHE_NAME = 'toxicbro-v2';
 const STATIC_ASSETS = [
   '/',
   '/index.html',
@@ -12,6 +12,13 @@ const STATIC_ASSETS = [
   '/channel.json',
   '/videos.json',
   '/favicon.ico',
+  '/favicon/favicon.ico',
+  '/favicon/favicon-96x96.png',
+  '/favicon/apple-touch-icon.png',
+  '/favicon/site.webmanifest',
+  '/favicon/web-app-manifest-192x192.png',
+  '/favicon/web-app-manifest-512x512.png',
+  '/images/logo.png',
   '/fonts/site-fonts.css',
   '/fonts/site-fonts-secondary.css'
 ];
