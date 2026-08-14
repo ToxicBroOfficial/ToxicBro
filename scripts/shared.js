@@ -1,9 +1,9 @@
-// ToxicBro Shared Utilities
+﻿// ToxicBro Shared Utilities
 const SITE = {
   url: 'https://toxicbro.pages.dev',
   name: 'ToxicBro Official',
   channelId: 'UCXG8sste5hX3P26gWayrlkg',
-  username: '@ToxicBroYT',
+  username: '@ToxicBroOfficial',
   email: 'contacttoxicbro@gmail.com'
 };
 
@@ -34,3 +34,4 @@ window.addEventListener('load', () => {
 
 // Year updater
 document.getElementById('year') && (document.getElementById('year').textContent = new Date().getFullYear());
+
