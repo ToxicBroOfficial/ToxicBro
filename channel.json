@@ -1,11 +1,11 @@
 {
   "stats": {
-    "subscriberCount": "20300",
+    "subscriberCount": "20400",
     "videoCount": "80",
-    "viewCount": "1844552"
+    "viewCount": "1846462"
   },
-  "updatedAt": "2026-10-29T00:40:03.247Z",
+  "updatedAt": "2026-10-30T00:40:48.966Z",
   "cached": false,
-  "syncedAt": "2026-10-29T00:40:03.247Z",
+  "syncedAt": "2026-10-30T00:40:48.966Z",
   "source": "youtube-sync"
 }
